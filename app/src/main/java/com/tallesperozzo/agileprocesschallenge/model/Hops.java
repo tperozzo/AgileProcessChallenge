@@ -1,6 +1,8 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
-public class Hops {
+import java.io.Serializable;
+
+public class Hops implements Serializable {
     String name;
     Measure amount;
     String add;

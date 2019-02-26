@@ -1,8 +1,9 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Beer {
+public class Beer implements Serializable {
     int id;
     String name;
     String tagline;

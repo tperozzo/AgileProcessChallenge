@@ -1,8 +1,9 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Method {
+public class Method implements Serializable {
     ArrayList<MashTemp> mash_temp;
     Fermentation fermentation;
     String twist;

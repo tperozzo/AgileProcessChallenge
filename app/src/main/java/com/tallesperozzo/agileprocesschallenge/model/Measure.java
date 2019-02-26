@@ -1,6 +1,8 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
-public class Measure {
+import java.io.Serializable;
+
+public class Measure implements Serializable {
     int value;
     String unit;
 

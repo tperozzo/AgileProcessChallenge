@@ -1,8 +1,9 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ingredients {
+public class Ingredients implements Serializable {
     ArrayList<Malt> malt;
     ArrayList<Hops> hops;
     String yeast;

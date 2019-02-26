@@ -1,6 +1,8 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
-public class Malt {
+import java.io.Serializable;
+
+public class Malt implements Serializable {
     String name;
     Measure amount;
 

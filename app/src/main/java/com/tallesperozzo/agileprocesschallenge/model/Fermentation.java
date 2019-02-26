@@ -1,6 +1,8 @@
 package com.tallesperozzo.agileprocesschallenge.model;
 
-public class Fermentation {
+import java.io.Serializable;
+
+public class Fermentation implements Serializable {
     Measure temp;
 
     public Fermentation(Measure temp) {
