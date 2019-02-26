@@ -21,10 +21,12 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
 
     Context context;
     List<Beer> beerList;
+    final private ListItemClickListener mOnClickListener;
 
-    public BeerListAdapter(Context context, List<Beer> beerList) {
+    public BeerListAdapter(Context context, List<Beer> beerList, ListItemClickListener listener) {
         this.context = context;
         this.beerList = beerList;
+        mOnClickListener = listener;
     }
 
     public void clear() {
@@ -71,7 +73,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
         return beerList.size();
     }
 
-    class BeerViewHolder extends RecyclerView.ViewHolder {
+    class BeerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         ImageView imageUrl_iv;
         ProgressBar imageUrl_pb;
@@ -82,7 +84,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
 
         public BeerViewHolder(View itemView) {
             super(itemView);
-
+            itemView.setOnClickListener(this);
             imageUrl_iv = itemView.findViewById(R.id.image_url_iv);
             imageUrl_pb = itemView.findViewById(R.id.image_url_pb);
             name_tv = itemView.findViewById(R.id.name_tv);
@@ -90,5 +92,14 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
             abv_tv = itemView.findViewById(R.id.abv_tv);
             first_brewed_tv = itemView.findViewById(R.id.first_brewed_tv);
         }
+
+        @Override
+        public void onClick(View v) {
+            mOnClickListener.onListItemClick(getAdapterPosition());
+        }
+    }
+
+    public interface ListItemClickListener{
+        void onListItemClick(int clickedItemIndex);
     }
 }
