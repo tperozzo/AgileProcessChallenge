@@ -54,6 +54,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         beerListAdapter = new BeerListAdapter(this, beerList, this);
         beerList_rv.setAdapter(beerListAdapter);
 
+        getBeerList();
     }
 
     @Override
