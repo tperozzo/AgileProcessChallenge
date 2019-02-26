@@ -60,7 +60,8 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
                             }
                         });
 
-                        beerViewHolder.name_tv.setText(beer.getName());
+        beerViewHolder.name_tv.setText(beer.getName());
+        beerViewHolder.tagline_tv.setText(beer.getTagline());
         beerViewHolder.abv_tv.setText(String.valueOf(beer.getAbv()));
         beerViewHolder.first_brewed_tv.setText(beer.getFirst_brewed());
     }
@@ -75,6 +76,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
         ImageView imageUrl_iv;
         ProgressBar imageUrl_pb;
         TextView name_tv;
+        TextView tagline_tv;
         TextView abv_tv;
         TextView first_brewed_tv;
 
@@ -84,6 +86,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
             imageUrl_iv = itemView.findViewById(R.id.image_url_iv);
             imageUrl_pb = itemView.findViewById(R.id.image_url_pb);
             name_tv = itemView.findViewById(R.id.name_tv);
+            tagline_tv = itemView.findViewById(R.id.tagline_tv);
             abv_tv = itemView.findViewById(R.id.abv_tv);
             first_brewed_tv = itemView.findViewById(R.id.first_brewed_tv);
         }

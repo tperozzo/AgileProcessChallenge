@@ -14,24 +14,11 @@
         android:indeterminate="false"
         android:visibility="gone"/>
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/beer_list_rv"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/beer_list_rv"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <Button
-            android:id="@+id/load_more_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Load More"/>
-
-    </LinearLayout>
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

@@ -5,6 +5,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -31,7 +33,7 @@ public class BeerListActivity extends AppCompatActivity {
     ProgressBar beers_pb;
     List<Beer> beerList;
     int page = 1;
-    Button loadMore_btn;
+    boolean isLoading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +52,31 @@ public class BeerListActivity extends AppCompatActivity {
 
     }
 
-    private void setupViews(){
-        loadMore_btn = findViewById(R.id.load_more_btn);
-        loadMore_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.beer_list_menu, menu);
+        if(isLoading)
+            menu.getItem(0).setVisible(false);
+        else
+            menu.getItem(0).setVisible(true);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.load_more_btn:
                 getBeerList();
-            }
-        });
+                invalidateOptionsMenu();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    private void setupViews(){
         beers_pb = findViewById(R.id.beers_pb);
         beerList_rv = findViewById(R.id.beer_list_rv);
         beerList_rv.setHasFixedSize(true);
@@ -68,7 +87,7 @@ public class BeerListActivity extends AppCompatActivity {
     private void getBeerList(){
         beers_pb.setIndeterminate(true);
         beers_pb.setVisibility(View.VISIBLE);
-
+        isLoading = true;
         BeerService service = RetrofitInitiazer.getRetrofitInstance().create(BeerService.class);
         Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
 
@@ -80,12 +99,16 @@ public class BeerListActivity extends AppCompatActivity {
                 beers_pb.setIndeterminate(false);
                 beers_pb.setVisibility(View.GONE);
                 page++;
+                isLoading = false;
+                invalidateOptionsMenu();
             }
 
             @Override
             public void onFailure(Call<List<Beer>> call, Throwable t) {
                 beers_pb.setIndeterminate(false);
                 beers_pb.setVisibility(View.GONE);
+                isLoading = false;
+                invalidateOptionsMenu();
             }
         });
     }
