@@ -21,6 +21,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 Intent i = new Intent(getApplicationContext(), BeerListActivity.class);
                 startActivity(i);
+                finish();
             }
         }, Constants.SPLASH_TIME_OUT);
 

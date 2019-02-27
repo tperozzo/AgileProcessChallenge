@@ -21,6 +21,7 @@ public class Beer implements Serializable {
     Measure volume;
     Measure boil_volume;
     Method method;
+    Ingredients ingredients;
     ArrayList<String> food_pairing;
     String brewers_tips;
     String contributed_by;
@@ -126,5 +127,9 @@ public class Beer implements Serializable {
 
     public String getContributed_by() {
         return contributed_by;
+    }
+
+    public Ingredients getIngredients() {
+        return ingredients;
     }
 }

@@ -3,7 +3,7 @@ package com.tallesperozzo.agileprocesschallenge.model;
 import java.io.Serializable;
 
 public class Measure implements Serializable {
-    int value;
+    float value;
     String unit;
 
     public Measure(int value, String unit) {
@@ -11,7 +11,7 @@ public class Measure implements Serializable {
         this.unit = unit;
     }
 
-    public int getValue() {
+    public float getValue() {
         return value;
     }
 
