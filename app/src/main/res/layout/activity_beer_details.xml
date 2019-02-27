@@ -12,7 +12,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp">
 
             <LinearLayout
@@ -27,7 +27,8 @@
                     <ImageView
                         android:id="@+id/image_url_iv"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="200dp"
+                        android:layout_gravity="center"
                         android:padding="16dp"/>
 
                     <ProgressBar
@@ -49,15 +50,16 @@
 
                     <TextView
                         android:id="@+id/name_tv"
-                        android:textSize="18sp"
+                        android:textSize="20sp"
                         android:textStyle="bold"
+                        android:textColor="@color/colorPrimaryDark"
                         android:paddingBottom="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
 
                     <TextView
                         android:id="@+id/tagline_tv"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
                         android:paddingBottom="8dp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -114,15 +116,26 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Special Info"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:text="Description:"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/description_tv"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="8dp"/>
 
                 <TextView
@@ -130,22 +143,26 @@
                     android:layout_height="wrap_content"
                     android:text="Food pairing:"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
                     android:id="@+id/food_pairing_1_tv" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
                     android:id="@+id/food_pairing_2_tv" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:paddingLeft="8dp"
                     android:id="@+id/food_pairing_3_tv"
                     android:paddingBottom="8dp"/>
 
@@ -154,13 +171,15 @@
                     android:layout_height="wrap_content"
                     android:text="Brewers tips:"
                     android:textStyle="bold"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:id="@+id/brewers_tips_tv"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="8dp"/>
 
             </LinearLayout>
@@ -182,14 +201,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Technical info:"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:paddingBottom="4dp"/>
+                    android:textSize="20sp"
+                    android:paddingBottom="8dp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp">
 
                     <TextView
@@ -210,6 +231,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp">
 
                     <TextView
@@ -230,6 +252,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp">
 
                     <TextView
@@ -250,6 +273,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp">
 
                     <TextView
@@ -284,18 +308,28 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Method:"
+                    android:text="Cooking Info"
                     android:textStyle="bold"
-                    android:paddingBottom="4dp"
-                    android:textSize="16sp" />
+                    android:textColor="@color/colorPrimaryDark"
+                    android:paddingBottom="8dp"
+                    android:textSize="20sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Method:"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
                     android:text="Mash Temp:"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/mash_temp_rv"
@@ -309,10 +343,10 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:text="Fermantation:"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/fermatation_tv"
@@ -326,10 +360,10 @@
                     android:id="@+id/twist_label_tv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:text="Twist:"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/twist_tv"
@@ -344,16 +378,17 @@
                     android:layout_height="wrap_content"
                     android:text="Ingredients:"
                     android:textStyle="bold"
+                    android:paddingLeft="8dp"
                     android:paddingBottom="4dp"
-                    android:textSize="16sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Malt:"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/malt_rv"
@@ -368,9 +403,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Hops:"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/hops_rv"
@@ -385,9 +420,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Yeast:"
-                    android:paddingLeft="8dp"
+                    android:paddingLeft="16dp"
                     android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/yeast_tv"

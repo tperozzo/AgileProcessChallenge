@@ -125,9 +125,9 @@ public class BeerDetailsActivity extends AppCompatActivity {
         brewersTips_tv = findViewById(R.id.brewers_tips_tv);
 
         description_tv.setText(beer.getDescription());
-        foodPairing_1_tv.setText(" - " + beer.getFood_pairing().get(0));
-        foodPairing_2_tv.setText(" - " + beer.getFood_pairing().get(1));
-        foodPairing_3_tv.setText(" - " + beer.getFood_pairing().get(2));
+        foodPairing_1_tv.setText(beer.getFood_pairing().get(0) + ";");
+        foodPairing_2_tv.setText(beer.getFood_pairing().get(1) + ";");
+        foodPairing_3_tv.setText(beer.getFood_pairing().get(2) + ".");
         brewersTips_tv.setText(beer.getBrewers_tips());
     }
 

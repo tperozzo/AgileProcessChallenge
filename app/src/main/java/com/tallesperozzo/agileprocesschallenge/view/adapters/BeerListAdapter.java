@@ -64,8 +64,9 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
 
         beerViewHolder.name_tv.setText(beer.getName());
         beerViewHolder.tagline_tv.setText(beer.getTagline());
-        beerViewHolder.abv_tv.setText(String.valueOf(beer.getAbv()));
-        beerViewHolder.first_brewed_tv.setText(beer.getFirst_brewed());
+        beerViewHolder.abv_tv.setText("ABV: " + String.valueOf(beer.getAbv()));
+        beerViewHolder.firstBrewed_tv.setText(beer.getFirst_brewed());
+        beerViewHolder.contributedBy_tv.setText("By " + beer.getContributed_by());
     }
 
     @Override
@@ -80,7 +81,8 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
         TextView name_tv;
         TextView tagline_tv;
         TextView abv_tv;
-        TextView first_brewed_tv;
+        TextView firstBrewed_tv;
+        TextView contributedBy_tv;
 
         public BeerViewHolder(View itemView) {
             super(itemView);
@@ -90,7 +92,8 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
             name_tv = itemView.findViewById(R.id.name_tv);
             tagline_tv = itemView.findViewById(R.id.tagline_tv);
             abv_tv = itemView.findViewById(R.id.abv_tv);
-            first_brewed_tv = itemView.findViewById(R.id.first_brewed_tv);
+            firstBrewed_tv = itemView.findViewById(R.id.first_brewed_tv);
+            contributedBy_tv = itemView.findViewById(R.id.contributed_by_tv);
         }
 
         @Override
