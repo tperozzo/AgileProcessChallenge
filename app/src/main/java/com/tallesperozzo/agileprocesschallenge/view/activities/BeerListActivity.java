@@ -38,6 +38,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     ProgressBar beers_pb;
     List<Beer> beerList;
     int page = 1;
+    int get_mode = Constants.API_MODE; //TODO tirar depois de shared pref
     boolean isLoading = false;
     Context ctx;
 
@@ -75,7 +76,31 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.load_more_btn:
-                getBeerList();
+                if(get_mode == Constants.FAVORITES_MODE){
+                    beerListAdapter.clear();
+                    getBeerList();
+                    get_mode = Constants.API_MODE;
+                    page = 1;
+                }
+                else{
+                    getBeerList();
+                }
+                return true;
+            case R.id.get_from_api_btn:
+                if(get_mode == Constants.FAVORITES_MODE){
+                    beerListAdapter.clear();
+                    getBeerList();
+                    get_mode = Constants.API_MODE;
+                    page = 1;
+                }
+                else{
+                    getBeerList();
+                }
+                return true;
+            case R.id.get_favorites_btn:
+                FavoriteBeersTask fTask = new FavoriteBeersTask(ctx);
+                fTask.execute();
+                get_mode = Constants.FAVORITES_MODE;
                 return true;
 
             default:

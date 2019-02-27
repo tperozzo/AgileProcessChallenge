@@ -1,21 +1,28 @@
 package com.tallesperozzo.agileprocesschallenge.view.activities;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.tallesperozzo.agileprocesschallenge.R;
+import com.tallesperozzo.agileprocesschallenge.data.FavoriteBeersContract;
 import com.tallesperozzo.agileprocesschallenge.model.Beer;
 import com.tallesperozzo.agileprocesschallenge.utils.Constants;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.HopsListAdapter;
@@ -26,6 +33,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
     private Beer beer;
     private Context context;
+    private boolean isFavorite = false;
 
     ImageView imageUrl_iv;
     ProgressBar imageUrl_pb;
@@ -74,6 +82,24 @@ public class BeerDetailsActivity extends AppCompatActivity {
         if(beer != null) {
             SetupViews();
         }
+
+        Cursor result = context.getContentResolver().query(
+                FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
+                null,
+                FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
+                new String[]{String.valueOf(beer.getId())},
+                null
+        );
+
+
+        if(result != null) {
+            if (result.getCount() > 0)
+                isFavorite = true;
+        }
+        else
+            isFavorite = false;
+
+        invalidateOptionsMenu();
     }
 
     private void SetupViews(){
@@ -180,5 +206,72 @@ public class BeerDetailsActivity extends AppCompatActivity {
             twist_tv.setVisibility(View.GONE);
             twistLabel_tv.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(isFavorite)
+            getMenuInflater().inflate(R.menu.details_favorite_menu, menu);
+        else
+            getMenuInflater().inflate(R.menu.details_not_favorite_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.not_favorite:
+                //become isFavorite
+                if(insert()){
+                    isFavorite = true;
+                    invalidateOptionsMenu();
+                    //TODO
+                }
+                else{
+                    //TODO
+                }
+                return true;
+            case R.id.favorite:
+                //become not isFavorite
+                if(delete()){
+                    isFavorite = false;
+                    invalidateOptionsMenu();
+                    //TODO
+                }
+                else{
+                    //TODO
+                }
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public boolean insert(){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER, beer.getId());
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_NAME, beer.getName());
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_TAGLINE, beer.getTagline());
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ABV, beer.getAbv());
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_IMAGE_URL, beer.getImage_url());
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_FIRST_BREWED, beer.getFirst_brewed());
+        contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_CONTRIBUTED_BY, beer.getContributed_by());
+
+        Uri uri = getContentResolver().insert(FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI, contentValues);
+
+        if(uri != null)
+            return true;
+        else
+            return false;
+    }
+
+    public boolean delete(){
+        Uri uri = FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(String.valueOf(beer.getId())).build();
+        if(getContentResolver().delete(uri, null, null) > 0)
+            return true;
+        else
+            return false;
     }
 }

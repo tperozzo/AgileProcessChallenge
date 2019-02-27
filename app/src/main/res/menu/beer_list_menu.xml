@@ -5,4 +5,16 @@
         android:icon="@drawable/more_ten_ic"
         android:title="k"
         app:showAsAction="always"/>
+    <item android:id="@+id/show_mode_btn"
+        android:icon="@drawable/show_mode"
+        android:title="k"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/get_from_api_btn"
+                android:title="Get Beers from API" />
+            <item android:id="@+id/get_favorites_btn"
+                android:title="Get Favorites Beers" />
+        </menu>
+    </item>
+
 </menu>
