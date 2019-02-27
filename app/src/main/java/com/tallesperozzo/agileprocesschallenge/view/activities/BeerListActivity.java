@@ -2,6 +2,7 @@ package com.tallesperozzo.agileprocesschallenge.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -12,8 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.os.AsyncTask;
 
 import com.tallesperozzo.agileprocesschallenge.R;
+import com.tallesperozzo.agileprocesschallenge.data.FavoriteBeersContract;
 import com.tallesperozzo.agileprocesschallenge.model.Beer;
 import com.tallesperozzo.agileprocesschallenge.retrofit.RetrofitInitiazer;
 import com.tallesperozzo.agileprocesschallenge.retrofit.service.BeerService;
@@ -148,6 +151,61 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             Intent i = new Intent(ctx, BeerDetailsActivity.class);
             i.putExtra(Constants.BEER_TAG, beerList.get(clickedItemIndex));
             startActivity(i);
+        }
+    }
+
+    public class FavoriteBeersTask extends AsyncTask<Void, Void, List<Beer>> {
+
+        private Context mContext;
+
+        public FavoriteBeersTask(Context context) {
+            mContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            beerListAdapter.clear();
+        }
+
+        private List<Beer> getFavoriteMovies(Cursor cursor) {
+            List<Beer> results = new ArrayList<>();
+            if (cursor != null && cursor.moveToFirst()) {
+                do {
+                    Beer beer = new Beer(cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getFloat(4), cursor.getString(5), cursor.getString(6), cursor.getString(7));
+                    results.add(beer);
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+            return results;
+        }
+
+        @Override
+        protected List<Beer> doInBackground(Void... params) {
+            Cursor cursor = mContext.getContentResolver().query(
+                    FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            List<Beer> result = getFavoriteMovies(cursor);
+
+            if(result != null) {
+                if (!result.isEmpty()) {
+                    beerList.addAll(result);
+
+                }
+            }
+
+            return result;
+        }
+
+        @Override
+        protected void onPostExecute(List<Beer> eers) {
+
+            beerListAdapter.notifyDataSetChanged();
+
         }
     }
 }
