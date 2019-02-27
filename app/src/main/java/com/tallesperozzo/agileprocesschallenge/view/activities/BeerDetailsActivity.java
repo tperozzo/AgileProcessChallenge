@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,16 +25,26 @@ import com.squareup.picasso.Picasso;
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.data.FavoriteBeersContract;
 import com.tallesperozzo.agileprocesschallenge.model.Beer;
+import com.tallesperozzo.agileprocesschallenge.retrofit.RetrofitInitiazer;
+import com.tallesperozzo.agileprocesschallenge.retrofit.service.BeerService;
 import com.tallesperozzo.agileprocesschallenge.utils.Constants;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.HopsListAdapter;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.MaltListAdapter;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.MashTempListAdapter;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Response;
 
 public class BeerDetailsActivity extends AppCompatActivity {
 
     private Beer beer;
     private Context context;
     private boolean isFavorite = false;
+    private int get_mode;
+
+    ProgressBar beer_pb;
 
     ImageView imageUrl_iv;
     ProgressBar imageUrl_pb;
@@ -78,26 +89,57 @@ public class BeerDetailsActivity extends AppCompatActivity {
         context = this;
         final Intent intent = getIntent();
 
+        get_mode = intent.getIntExtra(Constants.GET_MODE_PREF, 0);
+        beer_pb = findViewById(R.id.beer_pb);
+
         beer = (Beer) intent.getSerializableExtra(Constants.BEER_TAG);
-        if(beer != null) {
-            SetupViews();
+
+        if(get_mode == Constants.API_MODE) {
+
+            if (beer != null) {
+                SetupViews();
+            }
+
+            Cursor result = context.getContentResolver().query(
+                    FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
+                    null,
+                    FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
+                    new String[]{String.valueOf(beer.getId())},
+                    null
+            );
+
+
+            if(result != null) {
+                if (result.getCount() > 0)
+                    isFavorite = true;
+            }
+            else
+                isFavorite = false;
         }
 
-        Cursor result = context.getContentResolver().query(
-                FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
-                null,
-                FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
-                new String[]{String.valueOf(beer.getId())},
-                null
-        );
+        else{
+            final LinearLayout root_ll = findViewById(R.id.details_root_layout);
+            root_ll.setVisibility(View.GONE);
+            isFavorite = true;
+            StartLoading();
+            BeerService service = RetrofitInitiazer.getRetrofitInstance().create(BeerService.class);
+            Call<List<Beer>> call = service.getBeerById(beer.getId());
 
+            call.enqueue(new retrofit2.Callback<List<Beer>>() {
+                @Override
+                public void onResponse(Call<List<Beer>> call, Response<List<Beer>> response) {
+                    beer = response.body().get(0);
+                    FinishLoading();
+                    root_ll.setVisibility(View.VISIBLE);
+                    SetupViews();
+                }
 
-        if(result != null) {
-            if (result.getCount() > 0)
-                isFavorite = true;
+                @Override
+                public void onFailure(Call<List<Beer>> call, Throwable t) {
+                    FinishLoading();
+                }
+            });
         }
-        else
-            isFavorite = false;
 
         invalidateOptionsMenu();
     }
@@ -273,5 +315,15 @@ public class BeerDetailsActivity extends AppCompatActivity {
             return true;
         else
             return false;
+    }
+
+    public void StartLoading(){
+        beer_pb.setIndeterminate(true);
+        beer_pb.setVisibility(View.VISIBLE);
+    }
+
+    public void FinishLoading(){
+        beer_pb.setIndeterminate(false);
+        beer_pb.setVisibility(View.GONE);
     }
 }

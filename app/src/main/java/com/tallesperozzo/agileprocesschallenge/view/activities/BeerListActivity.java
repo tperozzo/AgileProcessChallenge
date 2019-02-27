@@ -2,6 +2,7 @@ package com.tallesperozzo.agileprocesschallenge.view.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,9 +39,10 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     ProgressBar beers_pb;
     List<Beer> beerList;
     int page = 1;
-    int get_mode = Constants.API_MODE; //TODO tirar depois de shared pref
+    int get_mode;
     boolean isLoading = false;
     Context ctx;
+    private SharedPreferences sharedPrefSettings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,8 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         setupViews();
 
         ctx = this;
-
+        sharedPrefSettings = getSharedPreferences(Constants.SHARED_PREF_REF, 0);
+        get_mode = getSetting(Constants.GET_MODE_PREF, Constants.API_MODE);
         if(savedInstanceState == null)
             beerList = new ArrayList<>();
         else
@@ -58,8 +61,10 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         beerListAdapter = new BeerListAdapter(this, beerList, this);
         beerList_rv.setAdapter(beerListAdapter);
 
-        getBeerList();
-
+        if(get_mode == Constants.API_MODE)
+            getBeerListFromAPI();
+        else
+            getFavoriteBeers();
     }
 
     @Override
@@ -78,29 +83,19 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             case R.id.load_more_btn:
                 if(get_mode == Constants.FAVORITES_MODE){
                     beerListAdapter.clear();
-                    getBeerList();
-                    get_mode = Constants.API_MODE;
                     page = 1;
                 }
-                else{
-                    getBeerList();
-                }
+                getBeerListFromAPI();
                 return true;
             case R.id.get_from_api_btn:
                 if(get_mode == Constants.FAVORITES_MODE){
                     beerListAdapter.clear();
-                    getBeerList();
-                    get_mode = Constants.API_MODE;
                     page = 1;
                 }
-                else{
-                    getBeerList();
-                }
+                getBeerListFromAPI();
                 return true;
             case R.id.get_favorites_btn:
-                FavoriteBeersTask fTask = new FavoriteBeersTask(ctx);
-                fTask.execute();
-                get_mode = Constants.FAVORITES_MODE;
+                getFavoriteBeers();
                 return true;
 
             default:
@@ -117,7 +112,16 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         beerList_rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
     }
 
-    private void getBeerList(){
+    private void getFavoriteBeers(){
+        FavoriteBeersTask fTask = new FavoriteBeersTask(ctx);
+        fTask.execute();
+        get_mode = Constants.FAVORITES_MODE;
+        setSetting(Constants.GET_MODE_PREF, Constants.FAVORITES_MODE);
+    }
+
+    private void getBeerListFromAPI(){
+        get_mode = Constants.API_MODE;
+        setSetting(Constants.GET_MODE_PREF, Constants.API_MODE);
         StartLoading();
         BeerService service = RetrofitInitiazer.getRetrofitInstance().create(BeerService.class);
         Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
@@ -150,17 +154,17 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         beerList_rv.getLayoutManager().startSmoothScroll(smoothScroller);
     }
 
-    public void FinishLoading(){
-        beers_pb.setIndeterminate(false);
-        beers_pb.setVisibility(View.GONE);
-        isLoading = false;
-        invalidateOptionsMenu();
-    }
-
     public void StartLoading(){
         beers_pb.setIndeterminate(true);
         beers_pb.setVisibility(View.VISIBLE);
         isLoading = true;
+        invalidateOptionsMenu();
+    }
+
+    public void FinishLoading(){
+        beers_pb.setIndeterminate(false);
+        beers_pb.setVisibility(View.GONE);
+        isLoading = false;
         invalidateOptionsMenu();
     }
 
@@ -174,6 +178,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     public void onListItemClick(int clickedItemIndex) {
         if(!isLoading) {
             Intent i = new Intent(ctx, BeerDetailsActivity.class);
+            i.putExtra(Constants.GET_MODE_PREF, get_mode);
             i.putExtra(Constants.BEER_TAG, beerList.get(clickedItemIndex));
             startActivity(i);
         }
@@ -222,14 +227,29 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
                 }
             }
-
             return result;
         }
 
         @Override
         protected void onPostExecute(List<Beer> eers) {
-
             beerListAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private int getSetting(String tag, int defaultReturn) {
+        try {
+            return sharedPrefSettings.getInt(tag, defaultReturn);
+        } catch (Exception e) {
+            return defaultReturn;
+        }
+    }
+
+    private void setSetting(String tag, int value) {
+        try {
+            SharedPreferences.Editor editor = sharedPrefSettings.edit();
+            editor.putInt(tag, value);
+            editor.commit();
+        } catch (Exception e) {
 
         }
     }
