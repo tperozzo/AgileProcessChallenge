@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -116,35 +118,39 @@ public class BeerDetailsActivity extends AppCompatActivity {
     //region GetBeerByID from Punk API
 
     private void GetBeerByID(){
-        final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
-        root_ll.setVisibility(View.GONE);
-        isFavorite = true;
-        StartLoading();
-        BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
-        Call<List<Beer>> call = service.getBeerById(beer.getId());
+        if(isOnline()) {
+            final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
+            root_ll.setVisibility(View.GONE);
+            isFavorite = true;
+            StartLoading();
+            BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
+            Call<List<Beer>> call = service.getBeerById(beer.getId());
 
-        call.enqueue(new retrofit2.Callback<List<Beer>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Beer>> call, @NonNull  Response<List<Beer>> response) {
-                if(!Objects.requireNonNull(response.body()).isEmpty()) {
-                    beer = response.body().get(0);
-                    FinishLoading();
-                    root_ll.setVisibility(View.VISIBLE);
-                    SetupViews();
-                    isFavoriteAndLoaded = true;
+            call.enqueue(new retrofit2.Callback<List<Beer>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Beer>> call, @NonNull Response<List<Beer>> response) {
+                    if (!Objects.requireNonNull(response.body()).isEmpty()) {
+                        beer = response.body().get(0);
+                        FinishLoading();
+                        root_ll.setVisibility(View.VISIBLE);
+                        SetupViews();
+                        isFavoriteAndLoaded = true;
+                    } else {
+                        FinishLoading();
+                        Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
+                    }
                 }
-                else{
-                    FinishLoading();
-                    Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
-                FinishLoading();
-                Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
+                    FinishLoading();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     //endregion
@@ -287,29 +293,29 @@ public class BeerDetailsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.not_favorite:
-                //become isFavorite
+                //become favorite
                 if(insert()){
                     isFavorite = true;
                     invalidateOptionsMenu();
-                    Snackbar.make(findViewById(R.id.details_root_layout), "Beer added to favorites", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.added_favorites_ok), Snackbar.LENGTH_SHORT).show();
                 }
                 else{
                     isFavorite = false;
                     invalidateOptionsMenu();
-                    Snackbar.make(findViewById(R.id.details_root_layout), "Beer can not be added to favorites", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.added_favorites_nok), Snackbar.LENGTH_SHORT).show();
                 }
                 return true;
             case R.id.favorite:
-                //become not isFavorite
+                //become not favorite
                 if(delete()){
                     isFavorite = false;
                     invalidateOptionsMenu();
-                    Snackbar.make(findViewById(R.id.details_root_layout), "Beer removed from favorites", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.removed_favorites_ok), Snackbar.LENGTH_SHORT).show();
                 }
                 else{
                     isFavorite = true;
                     invalidateOptionsMenu();
-                    Snackbar.make(findViewById(R.id.details_root_layout), "Beer can not be removed from favorites", Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.removed_favorites_nok), Snackbar.LENGTH_SHORT).show();
                 }
                 return true;
 
@@ -378,6 +384,24 @@ public class BeerDetailsActivity extends AppCompatActivity {
             loading_pg.setIndeterminate(false);
             loading_pg.setVisibility(View.GONE);
             loadingDialog.dismiss();
+        }
+    }
+
+    //endregion
+
+    //region Verify connection
+
+    private boolean isOnline() {
+        try {
+
+            ConnectivityManager cm =
+                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
+            return netInfo != null && netInfo.isConnected();
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+            return false;
         }
     }
 

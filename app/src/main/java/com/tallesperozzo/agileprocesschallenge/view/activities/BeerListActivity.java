@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -176,34 +178,39 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     // Punk API call
     private void GetBeerListFromAPI(){
-        setTitle(getString(R.string.beers_from_punk_api));
-        get_mode = Constants.API_MODE;
-        setSettingGetMode(Constants.API_MODE);
-        StartLoading();
-        BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
-        Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
+        if(isOnline()) {
 
-        call.enqueue(new Callback<List<Beer>>() {
-            @Override
-            public void onResponse(@NonNull Call<List<Beer>> call, @NonNull Response<List<Beer>> response) {
-                if(!Objects.requireNonNull(response.body()).isEmpty()){
-                    beerList.addAll(response.body());
-                    beerListAdapter.notifyDataSetChanged();
-                    RVScroolToFirstLoaded();
-                    page++;
-                }
-                else{
-                    Snackbar.make(findViewById(R.id.beer_list_root_layout), "End of beers.", Snackbar.LENGTH_SHORT).show();
-                }
-                FinishLoading();
-            }
+            setTitle(getString(R.string.beers_from_punk_api));
+            get_mode = Constants.API_MODE;
+            setSettingGetMode(Constants.API_MODE);
+            StartLoading();
+            BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
+            Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
 
-            @Override
-            public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
-                FinishLoading();
-                Snackbar.make(findViewById(R.id.beer_list_root_layout), "Connection Error", Snackbar.LENGTH_SHORT).show();
-            }
-        });
+            call.enqueue(new Callback<List<Beer>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Beer>> call, @NonNull Response<List<Beer>> response) {
+                    if (!Objects.requireNonNull(response.body()).isEmpty()) {
+                        beerList.addAll(response.body());
+                        beerListAdapter.notifyDataSetChanged();
+                        RVScroolToFirstLoaded();
+                        page++;
+                    } else {
+                        Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.end_of_beers), Snackbar.LENGTH_SHORT).show();
+                    }
+                    FinishLoading();
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
+                    FinishLoading();
+                    Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+        }
     }
 
     //After load beers (from Punk API) the app scrolls to the first new loaded beer position
@@ -282,7 +289,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         @Override
         protected void onPostExecute(List<Beer> beers) {
             if(beers.isEmpty())
-                Snackbar.make(findViewById(R.id.beer_list_root_layout), "You have not added any beer to favorites.", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.favorites_empty), Snackbar.LENGTH_SHORT).show();
 
             FinishLoading();
             beerListAdapter.notifyDataSetChanged();
@@ -359,6 +366,24 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             loading_pg.setIndeterminate(false);
             loading_pg.setVisibility(View.GONE);
             loadingDialog.dismiss();
+        }
+    }
+
+    //endregion
+
+    //region Verify connection
+
+    private boolean isOnline() {
+        try {
+
+            ConnectivityManager cm =
+                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = Objects.requireNonNull(cm).getActiveNetworkInfo();
+            return netInfo != null && netInfo.isConnected();
+        }
+        catch (NullPointerException e){
+            e.printStackTrace();
+            return false;
         }
     }
 
