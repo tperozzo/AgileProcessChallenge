@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +19,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -118,7 +118,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
 
         else{
-            final LinearLayout root_ll = findViewById(R.id.details_root_layout);
+            final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
             root_ll.setVisibility(View.GONE);
             isFavorite = true;
             StartLoading();
@@ -128,15 +128,23 @@ public class BeerDetailsActivity extends AppCompatActivity {
             call.enqueue(new retrofit2.Callback<List<Beer>>() {
                 @Override
                 public void onResponse(Call<List<Beer>> call, Response<List<Beer>> response) {
-                    beer = response.body().get(0);
-                    FinishLoading();
-                    root_ll.setVisibility(View.VISIBLE);
-                    SetupViews();
+                    if(!response.body().isEmpty()) {
+                        beer = response.body().get(0);
+                        FinishLoading();
+                        root_ll.setVisibility(View.VISIBLE);
+                        SetupViews();
+                    }
+                    else{
+                        Snackbar.make(findViewById(R.id.beer_list_root_layout), "Could not load beer info.", Snackbar.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
 
                 @Override
                 public void onFailure(Call<List<Beer>> call, Throwable t) {
                     FinishLoading();
+                    Snackbar.make(findViewById(R.id.details_root_layout), "Could not load beer info", Snackbar.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }

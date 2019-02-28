@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.activities.BeerListActivity">
+    tools:context=".view.activities.BeerListActivity"
+    android:id="@+id/beer_list_root_layout">
 
     <ProgressBar
         android:id="@+id/beers_pb"

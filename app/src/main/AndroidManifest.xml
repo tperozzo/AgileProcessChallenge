@@ -24,7 +24,8 @@
         <activity android:name=".view.activities.BeerListActivity">
         </activity>
 
-        <activity android:name=".view.activities.BeerDetailsActivity" >
+        <activity android:name=".view.activities.BeerDetailsActivity"
+            android:label="Beer Details">
         </activity>
 
         <provider
