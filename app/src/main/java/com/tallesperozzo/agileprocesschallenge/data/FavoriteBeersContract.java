@@ -3,7 +3,15 @@ package com.tallesperozzo.agileprocesschallenge.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
-@SuppressWarnings("ALL")
+/*
+ * FavoriteBeersContract
+ *
+ * Contract class to favorite database
+ *
+ * Created by Talles Perozzo
+ */
+
+@SuppressWarnings("unused")
 public class FavoriteBeersContract {
 
     public static final String AUTHORITY = "com.tallesperozzo.agileprocesschallenge";

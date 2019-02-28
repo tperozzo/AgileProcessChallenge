@@ -7,11 +7,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
+import java.util.List;
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.model.Malt;
 
-import java.util.List;
+/*
+ * MaltListAdapter
+ *
+ * To see the Malt list of a beer in BeerDetailActivity
+ *
+ * Created by Talles Perozzo
+ */
 
 public class MaltListAdapter extends RecyclerView.Adapter<MaltListAdapter.MaltViewHolder>{
 

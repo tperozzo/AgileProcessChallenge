@@ -13,6 +13,14 @@ import com.tallesperozzo.agileprocesschallenge.model.Hops;
 
 import java.util.List;
 
+/*
+ * HopsListAdapter
+ *
+ * To see the Hops list of a beer in BeerDetailActivity
+ *
+ * Created by Talles Perozzo
+ */
+
 public class HopsListAdapter extends RecyclerView.Adapter<HopsListAdapter.HopsViewHolder> {
 
     private final Context context;

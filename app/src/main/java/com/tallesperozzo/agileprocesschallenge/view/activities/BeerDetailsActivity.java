@@ -41,17 +41,25 @@ import java.util.Objects;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/*
+ * BeerDetailsActivity
+ *
+ * In this activity, the user can see the beer details and add/remove the beer to favorites.
+ *
+ * Created by Talles Perozzo
+ */
+
 public class BeerDetailsActivity extends AppCompatActivity {
 
     private Beer beer;
     private Context context;
+    private Dialog loadingDialog;
+    private ProgressBar imageUrl_pb;
+
     private boolean isFavorite = false;
     private boolean isFavoriteAndLoaded = false;
     private boolean canCreateMenu = false;
     private int get_mode;
-    private Dialog loadingDialog;
-
-    private ProgressBar imageUrl_pb;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,29 +74,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         beer = (Beer) intent.getSerializableExtra(Constants.BEER_TAG);
 
         if(get_mode == Constants.API_MODE) {
-
-            if (beer != null) {
-                SetupViews();
-            }
-
-
-            Cursor result = context.getContentResolver().query(
-                    FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
-                    null,
-                    FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
-                    new String[]{String.valueOf(beer.getId())},
-                    null
-            );
-
-            if (result != null) {
-                if (result.getCount() > 0)
-                    isFavorite = true;
-            } else
-                isFavorite = false;
-
-            Objects.requireNonNull(result).close();
-            canCreateMenu = true;
-            invalidateOptionsMenu();
+            GetBeerFromFavorites();
         }
 
         else{
@@ -97,6 +83,37 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
         invalidateOptionsMenu();
     }
+
+    //region GetBeerFromFavorites
+    // Get beer from favorites (or not) to setup (or not) favorites button
+
+    private void GetBeerFromFavorites(){
+        if (beer != null) {
+            SetupViews();
+        }
+
+        Cursor result = context.getContentResolver().query(
+                FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
+                null,
+                FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
+                new String[]{String.valueOf(beer.getId())},
+                null
+        );
+
+        if (result != null) {
+            if (result.getCount() > 0)
+                isFavorite = true;
+        } else
+            isFavorite = false;
+
+        Objects.requireNonNull(result).close();
+        canCreateMenu = true;
+        //invalidateOptionsMenu();
+    }
+
+    //endregion
+
+    //region GetBeerByID from Punk API
 
     private void GetBeerByID(){
         final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
@@ -129,6 +146,11 @@ public class BeerDetailsActivity extends AppCompatActivity {
             }
         });
     }
+
+    //endregion
+
+    //region SetupViews
+    // Load interface after getting beer
 
     private void SetupViews(){
         SetupGeralInfo();
@@ -236,6 +258,10 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
     }
 
+    //endregion
+
+    //region Menu
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if(canCreateMenu) {
@@ -296,6 +322,10 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
     }
 
+    //endregion
+
+    //region ContentProvider Methods
+
     private boolean insert(){
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER, beer.getId());
@@ -316,6 +346,10 @@ public class BeerDetailsActivity extends AppCompatActivity {
         uri = uri.buildUpon().appendPath(String.valueOf(beer.getId())).build();
         return getContentResolver().delete(uri, null, null) > 0;
     }
+
+    //endregion
+
+    //region Loading Methods
 
     private void StartLoading(){
         ShowLoadingDialog();
@@ -346,4 +380,6 @@ public class BeerDetailsActivity extends AppCompatActivity {
             loadingDialog.dismiss();
         }
     }
+
+    //endregion
 }

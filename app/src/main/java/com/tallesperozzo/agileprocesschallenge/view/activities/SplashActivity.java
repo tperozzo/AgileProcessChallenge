@@ -8,6 +8,14 @@ import android.os.Bundle;
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.utils.Constants;
 
+/*
+ * SplashActivity
+ *
+ * Goes to BeerListActivity after 2 seconds
+ *
+ * Created by Talles Perozzo
+ */
+
 public class SplashActivity extends AppCompatActivity {
 
     @Override

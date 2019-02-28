@@ -4,6 +4,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/*
+ * FavoriteBeersDbHelper
+ *
+ * DB Helper class to favorite database
+ *
+ * Created by Talles Perozzo
+ */
+
 class FavoriteBeersDbHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "favoritebeers.db";

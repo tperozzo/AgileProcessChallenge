@@ -41,4 +41,6 @@
     <string name="boil_volume">Boil volume: %1$s</string>
     <string name="food_pairing_placeholder">%1$s;</string>
     <string name="could_not_load_beer_info">Could not load beer info</string>
+    <string name="favorite_beers">Favorite Beers</string>
+    <string name="beers_from_punk_api">Beers from Punk API</string>
 </resources>

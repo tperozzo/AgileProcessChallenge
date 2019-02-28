@@ -40,40 +40,48 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/*
+ * BeerListActivity
+ *
+ * This activity get and show the beer list.
+ * The Get Mode can be from favorites database or Punk API.
+ * Once the mode is selected it is saved in the application preferences file.
+ * When a list item is selected, this goes to the beer detail screen.
+ *
+ * Created by Talles Perozzo
+ */
+
 public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.ListItemClickListener{
 
     private RecyclerView beerList_rv;
+    private Dialog loadingDialog;
     private BeerListAdapter beerListAdapter;
+    private Context context;
+    private SharedPreferences sharedPrefSettings;
     private List<Beer> beerList;
+
     private int page = 1;
     private int get_mode;
     private boolean isLoading = false;
-    private Context context;
-    private SharedPreferences sharedPrefSettings;
-    private Dialog loadingDialog;
     private boolean goToDetails = false;
+
+    //region Lifecycle Methods
 
     @Override
     @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_list);
-        setupViews();
-
-        context = this;
-        sharedPrefSettings = getSharedPreferences(Constants.SHARED_PREF_REF, 0);
-        get_mode = getSetting();
-
-        beerList = new ArrayList<>();
-        beerListAdapter = new BeerListAdapter(this, beerList, this);
-        beerList_rv.setAdapter(beerListAdapter);
+        SetupViews();
+        SetupComponents();
 
         if(savedInstanceState == null) {
 
+            //Get beers when create activity
             if(get_mode == Constants.API_MODE)
-                getBeerListFromAPI();
+                GetBeerListFromAPI();
             else
-                getFavoriteBeers();
+                GetFavoriteBeers();
         }
         else
             beerList = (ArrayList<Beer>) savedInstanceState.getSerializable(Constants.RV_ITENS_SAVED);
@@ -81,10 +89,43 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     @Override
     protected void onResume() {
+        //check if a favorite beer was removed from favorites
+        //if yes reload activity
         if(goToDetails && get_mode == Constants.FAVORITES_MODE)
-            getFavoriteBeers();
+            GetFavoriteBeers();
         super.onResume();
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(Constants.RV_ITENS_SAVED, (Serializable) beerList);
+        super.onSaveInstanceState(outState);
+    }
+
+    //endregion
+
+    //region Setup Views and Components
+
+    private void SetupViews(){
+        beerList_rv = findViewById(R.id.beer_list_rv);
+        beerList_rv.setHasFixedSize(true);
+        beerList_rv.setLayoutManager(new LinearLayoutManager(this));
+        beerList_rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+    }
+
+    private void SetupComponents(){
+        context = this;
+        sharedPrefSettings = getSharedPreferences(Constants.SHARED_PREF_REF, 0);
+        get_mode = getSettingGetMode();
+
+        beerList = new ArrayList<>();
+        beerListAdapter = new BeerListAdapter(this, beerList, this);
+        beerList_rv.setAdapter(beerListAdapter);
+    }
+
+    //endregion
+
+    //region Menu
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,17 +152,17 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.load_more_btn:
-                getBeerListFromAPI();
+                GetBeerListFromAPI();
                 return true;
             case R.id.get_from_api_btn:
                 if(get_mode == Constants.FAVORITES_MODE){
                     beerListAdapter.clear();
                     page = 1;
                 }
-                getBeerListFromAPI();
+                GetBeerListFromAPI();
                 return true;
             case R.id.get_favorites_btn:
-                getFavoriteBeers();
+                GetFavoriteBeers();
                 return true;
 
             default:
@@ -129,26 +170,15 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         }
     }
 
-    private void setupViews(){
-        beerList_rv = findViewById(R.id.beer_list_rv);
-        beerList_rv.setHasFixedSize(true);
-        beerList_rv.setLayoutManager(new LinearLayoutManager(this));
-        beerList_rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-    }
+    //endregion
 
-    private void getFavoriteBeers(){
-        setTitle("Favorite Beers");
-        invalidateOptionsMenu();
-        FavoriteBeersTask fTask = new FavoriteBeersTask(context);
-        fTask.execute();
-        get_mode = Constants.FAVORITES_MODE;
-        setSetting(Constants.FAVORITES_MODE);
-    }
+    //region Get Beer List from Punk API
 
-    private void getBeerListFromAPI(){
-        setTitle("Beers from Punk API");
+    // Punk API call
+    private void GetBeerListFromAPI(){
+        setTitle(getString(R.string.beers_from_punk_api));
         get_mode = Constants.API_MODE;
-        setSetting(Constants.API_MODE);
+        setSettingGetMode(Constants.API_MODE);
         StartLoading();
         BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
         Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
@@ -176,6 +206,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         });
     }
 
+    //After load beers (from Punk API) the app scrolls to the first new loaded beer position
     private void RVScroolToFirstLoaded(){
         RecyclerView.SmoothScroller smoothScroller = new
                 LinearSmoothScroller(context) {
@@ -187,35 +218,19 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         Objects.requireNonNull(beerList_rv.getLayoutManager()).startSmoothScroll(smoothScroller);
     }
 
-    private void StartLoading(){
-        ShowLoadingDialog();
-        isLoading = true;
-        invalidateOptionsMenu();
+    //endregion
+
+    //region Get Favorite Beers from Database
+
+    private void GetFavoriteBeers(){
+        setTitle(getString(R.string.favorite_beers));
+        FavoriteBeersTask fTask = new FavoriteBeersTask(context);
+        fTask.execute();
+        get_mode = Constants.FAVORITES_MODE;
+        setSettingGetMode(Constants.FAVORITES_MODE);
     }
 
-    private void FinishLoading(){
-        DismissLoadingDialog();
-        isLoading = false;
-        invalidateOptionsMenu();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        outState.putSerializable(Constants.RV_ITENS_SAVED, (Serializable) beerList);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onListItemClick(int clickedItemIndex) {
-        if(!isLoading) {
-            Intent i = new Intent(context, BeerDetailsActivity.class);
-            i.putExtra(Constants.GET_MODE_PREF, get_mode);
-            i.putExtra(Constants.BEER_TAG, beerList.get(clickedItemIndex));
-            goToDetails = true;
-            startActivity(i);
-        }
-    }
-
+    //Async task to access the database
     @SuppressLint("StaticFieldLeak")
     class FavoriteBeersTask extends AsyncTask<Void, Void, List<Beer>> {
 
@@ -269,14 +284,31 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             if(beers.isEmpty())
                 Snackbar.make(findViewById(R.id.beer_list_root_layout), "You have not added any beer to favorites.", Snackbar.LENGTH_SHORT).show();
 
-            isLoading = false;
-            invalidateOptionsMenu();
-            beerListAdapter.notifyDataSetChanged();
             FinishLoading();
+            beerListAdapter.notifyDataSetChanged();
         }
     }
 
-    private int getSetting() {
+    //endregion
+
+    //region onListItemClick to Start Details Activity
+
+    @Override
+    public void onListItemClick(int clickedItemIndex) {
+        if(!isLoading) {
+            Intent i = new Intent(context, BeerDetailsActivity.class);
+            i.putExtra(Constants.GET_MODE_PREF, get_mode);
+            i.putExtra(Constants.BEER_TAG, beerList.get(clickedItemIndex));
+            goToDetails = true;
+            startActivity(i);
+        }
+    }
+
+    //endregion
+
+    //region SharedPreferences
+
+    private int getSettingGetMode() {
         try {
             return sharedPrefSettings.getInt(Constants.GET_MODE_PREF, Constants.API_MODE);
         } catch (Exception e) {
@@ -284,7 +316,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         }
     }
 
-    private void setSetting(int value) {
+    private void setSettingGetMode(int value) {
         try {
             SharedPreferences.Editor editor = sharedPrefSettings.edit();
             editor.putInt(Constants.GET_MODE_PREF, value);
@@ -292,6 +324,22 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         } catch (Exception ignored) {
 
         }
+    }
+
+    //endregion
+
+    //region Loading Methods
+
+    private void StartLoading(){
+        ShowLoadingDialog();
+        isLoading = true;
+        invalidateOptionsMenu();
+    }
+
+    private void FinishLoading(){
+        DismissLoadingDialog();
+        isLoading = false;
+        invalidateOptionsMenu();
     }
 
     private void ShowLoadingDialog(){
@@ -313,5 +361,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             loadingDialog.dismiss();
         }
     }
+
+    //endregion
 
 }

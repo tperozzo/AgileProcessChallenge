@@ -17,6 +17,14 @@ import com.tallesperozzo.agileprocesschallenge.model.Beer;
 
 import java.util.List;
 
+/*
+ * BeerListAdapter
+ *
+ * To see the beer list in ListBeerActivity
+ *
+ * Created by Talles Perozzo
+ */
+
 public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerViewHolder> {
 
     private final Context context;

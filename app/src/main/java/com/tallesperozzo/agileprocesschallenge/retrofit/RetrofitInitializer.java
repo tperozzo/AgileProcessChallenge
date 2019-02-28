@@ -5,6 +5,11 @@ import com.tallesperozzo.agileprocesschallenge.retrofit.service.BeerService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+/*
+ * Retrofit Class
+ * Created by Talles Perozzo
+ */
+
 public class RetrofitInitializer {
     private static Retrofit retrofit;
 
@@ -17,7 +22,5 @@ public class RetrofitInitializer {
         }
         return retrofit;
     }
-
-
 
 }

@@ -2,6 +2,11 @@ package com.tallesperozzo.agileprocesschallenge.model;
 
 import java.io.Serializable;
 
+/*
+ * Malt Class
+ * Created by Talles Perozzo
+ */
+
 @SuppressWarnings("unused")
 public class Malt implements Serializable {
     private String name;

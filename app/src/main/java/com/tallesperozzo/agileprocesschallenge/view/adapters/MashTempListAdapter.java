@@ -8,12 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import java.util.List;
 
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.model.MashTemp;
 
-
-import java.util.List;
+/*
+ * MashTempListAdapter
+ *
+ * To see the MashTemp list of a beer in BeerDetailActivity
+ *
+ * Created by Talles Perozzo
+ */
 
 public class MashTempListAdapter extends RecyclerView.Adapter<MashTempListAdapter.MashTempViewHolder> {
 

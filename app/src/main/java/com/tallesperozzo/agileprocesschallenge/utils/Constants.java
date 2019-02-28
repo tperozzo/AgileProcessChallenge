@@ -1,5 +1,10 @@
 package com.tallesperozzo.agileprocesschallenge.utils;
 
+/*
+ * Constants Class (to avoid hardcode)
+ * Created by Talles Perozzo
+ */
+
 public class Constants {
     public static final String RV_ITENS_SAVED = "rv_itens_saved";
     public static final int PER_PAGE = 10;
