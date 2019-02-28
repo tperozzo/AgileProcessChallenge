@@ -43,7 +43,7 @@
     <string name="could_not_load_beer_info">Could not load beer info</string>
     <string name="favorite_beers">Favorite Beers</string>
     <string name="beers_from_punk_api">Beers from Punk API</string>
-    <string name="connection_error">Connection error</string>
+    <string name="connection_error">Connection error. Try again!</string>
     <string name="end_of_beers">End of beers</string>
     <string name="favorites_empty">You have not added any beer to favorites.</string>
     <string name="added_favorites_ok">Beer added to favorites</string>

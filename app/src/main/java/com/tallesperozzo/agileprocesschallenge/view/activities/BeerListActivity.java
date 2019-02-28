@@ -85,8 +85,11 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             else
                 GetFavoriteBeers();
         }
-        else
+        else {
             beerList = (ArrayList<Beer>) savedInstanceState.getSerializable(Constants.RV_ITENS_SAVED);
+            beerListAdapter = new BeerListAdapter(this, beerList, this);
+            beerList_rv.setAdapter(beerListAdapter);
+        }
     }
 
     @Override
