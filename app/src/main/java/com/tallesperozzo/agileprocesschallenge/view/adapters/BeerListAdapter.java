@@ -56,6 +56,7 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
 
         Picasso.with(context)
                 .load(beer.getImage_url())
+                .error(R.drawable.error_image)
                 .into(beerViewHolder.imageUrl_iv, new Callback() {
                             @Override
                             public void onSuccess() {

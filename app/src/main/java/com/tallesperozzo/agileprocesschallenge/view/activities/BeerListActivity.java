@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSmoothScroller;
 import android.support.v7.widget.RecyclerView;
@@ -31,6 +30,7 @@ import com.tallesperozzo.agileprocesschallenge.model.Beer;
 import com.tallesperozzo.agileprocesschallenge.retrofit.RetrofitInitializer;
 import com.tallesperozzo.agileprocesschallenge.retrofit.service.BeerService;
 import com.tallesperozzo.agileprocesschallenge.utils.Constants;
+import com.tallesperozzo.agileprocesschallenge.view.components.SimpleDividerItemDecoration;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.BeerListAdapter;
 
 import java.io.Serializable;
@@ -110,9 +110,9 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     private void SetupViews(){
         beerList_rv = findViewById(R.id.beer_list_rv);
-        beerList_rv.setHasFixedSize(true);
         beerList_rv.setLayoutManager(new LinearLayoutManager(this));
-        beerList_rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //beerList_rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        beerList_rv.addItemDecoration(new SimpleDividerItemDecoration(this));
     }
 
     private void SetupComponents(){
