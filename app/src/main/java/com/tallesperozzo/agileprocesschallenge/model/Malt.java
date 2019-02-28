@@ -2,14 +2,10 @@ package com.tallesperozzo.agileprocesschallenge.model;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class Malt implements Serializable {
-    String name;
-    Measure amount;
-
-    public Malt(String name, Measure amount) {
-        this.name = name;
-        this.amount = amount;
-    }
+    private String name;
+    private Measure amount;
 
     public String getName() {
         return name;

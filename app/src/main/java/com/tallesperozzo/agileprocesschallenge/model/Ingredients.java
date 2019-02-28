@@ -3,16 +3,16 @@ package com.tallesperozzo.agileprocesschallenge.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Ingredients implements Serializable {
-    ArrayList<Malt> malt;
-    ArrayList<Hops> hops;
-    String yeast;
+/*
+ * Ingredients Class
+ * Created by Talles Perozzo
+ */
 
-    public Ingredients(ArrayList<Malt> malt, ArrayList<Hops> hops, String yeast) {
-        this.malt = malt;
-        this.hops = hops;
-        this.yeast = yeast;
-    }
+@SuppressWarnings("unused")
+public class Ingredients implements Serializable {
+    private ArrayList<Malt> malt;
+    private ArrayList<Hops> hops;
+    private String yeast;
 
     public ArrayList<Malt> getMalt() {
         return malt;

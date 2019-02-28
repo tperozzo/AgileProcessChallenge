@@ -2,12 +2,14 @@ package com.tallesperozzo.agileprocesschallenge.model;
 
 import java.io.Serializable;
 
-public class Fermentation implements Serializable {
-    Measure temp;
+/*
+ * Fermentation Class
+ * Created by Talles Perozzo
+ */
 
-    public Fermentation(Measure temp) {
-        this.temp = temp;
-    }
+@SuppressWarnings("unused")
+public class Fermentation implements Serializable {
+    private Measure temp;
 
     public Measure getTemp() {
         return temp;

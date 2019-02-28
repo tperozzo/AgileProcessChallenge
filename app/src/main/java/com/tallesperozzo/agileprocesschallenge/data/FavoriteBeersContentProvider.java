@@ -11,18 +11,20 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import java.util.Objects;
+
 import static com.tallesperozzo.agileprocesschallenge.data.FavoriteBeersContract.FavoriteBeersEntry.TABLE_NAME;
 
 public class FavoriteBeersContentProvider extends ContentProvider {
 
-    public static final int FAVORITE_BEERS = 100;
-    public static final int FAVORITE_BEERS_WITH_ID = 101;
+    private static final int FAVORITE_BEERS = 100;
+    private static final int FAVORITE_BEERS_WITH_ID = 101;
 
-    private FavoriteBeersDbHelper favoriteMoviesDbHelper;
+    private FavoriteBeersDbHelper favoriteBeersDbHelper;
 
     private static final UriMatcher uriMatcher = buildUriMatcher();
 
-    public static UriMatcher buildUriMatcher(){
+    private static UriMatcher buildUriMatcher(){
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         uriMatcher.addURI(FavoriteBeersContract.AUTHORITY, FavoriteBeersContract.PATH_FAVORITE_BEERS, FAVORITE_BEERS);
@@ -34,7 +36,7 @@ public class FavoriteBeersContentProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         Context context = getContext();
-        favoriteMoviesDbHelper = new FavoriteBeersDbHelper(context);
+        favoriteBeersDbHelper = new FavoriteBeersDbHelper(context);
 
         return true;
     }
@@ -42,11 +44,11 @@ public class FavoriteBeersContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        final SQLiteDatabase db = favoriteMoviesDbHelper.getReadableDatabase();
+        final SQLiteDatabase db = favoriteBeersDbHelper.getReadableDatabase();
 
         int match =  uriMatcher.match(uri);
 
-        Cursor retCursor = null;
+        Cursor retCursor;
 
         switch (match){
             case FAVORITE_BEERS:
@@ -63,7 +65,7 @@ public class FavoriteBeersContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        retCursor.setNotificationUri(Objects.requireNonNull(getContext()).getContentResolver(), uri);
 
         return retCursor;
     }
@@ -78,7 +80,7 @@ public class FavoriteBeersContentProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
 
-        final SQLiteDatabase db = favoriteMoviesDbHelper.getWritableDatabase();
+        final SQLiteDatabase db = favoriteBeersDbHelper.getWritableDatabase();
 
         int match = uriMatcher.match(uri);
 
@@ -102,31 +104,31 @@ public class FavoriteBeersContentProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        getContext().getContentResolver().notifyChange(uri, null);
+        Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
 
         return returnUri;
     }
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        final SQLiteDatabase db = favoriteMoviesDbHelper.getWritableDatabase();
+        final SQLiteDatabase db = favoriteBeersDbHelper.getWritableDatabase();
         int match = uriMatcher.match(uri);
 
-        int moviesDeleted; // starts as 0
+        int beersDeleted; // starts as 0
 
         switch (match) {
             case FAVORITE_BEERS_WITH_ID:
                 String id = uri.getPathSegments().get(1);
-                moviesDeleted = db.delete(TABLE_NAME, "id_beer=?", new String[]{id});
+                beersDeleted = db.delete(TABLE_NAME, "id_beer=?", new String[]{id});
                 break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if (moviesDeleted != 0) {
-            getContext().getContentResolver().notifyChange(uri, null);
+        if (beersDeleted != 0) {
+            Objects.requireNonNull(getContext()).getContentResolver().notifyChange(uri, null);
         }
 
-        return moviesDeleted;
+        return beersDeleted;
     }
 
     @Override

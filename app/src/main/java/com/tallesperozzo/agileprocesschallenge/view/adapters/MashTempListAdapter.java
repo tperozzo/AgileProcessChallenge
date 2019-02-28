@@ -17,8 +17,8 @@ import java.util.List;
 
 public class MashTempListAdapter extends RecyclerView.Adapter<MashTempListAdapter.MashTempViewHolder> {
 
-    Context context;
-    List<MashTemp> mashTempList;
+    private final Context context;
+    private final List<MashTemp> mashTempList;
 
     public MashTempListAdapter(Context context, List<MashTemp> mashTempList) {
         this.context = context;
@@ -35,9 +35,9 @@ public class MashTempListAdapter extends RecyclerView.Adapter<MashTempListAdapte
     @Override
     public void onBindViewHolder(@NonNull final MashTempViewHolder mashTempViewHolder, int position) {
         MashTemp mashTemp = mashTempList.get(position);
-        mashTempViewHolder.temp_tv.setText(mashTemp.getTemp().getValue() + " " + mashTemp.getTemp().getUnit());
+        mashTempViewHolder.temp_tv.setText(context.getString(R.string.measure_placeholder, String.valueOf(mashTemp.getTemp().getValue()), mashTemp.getTemp().getUnit()));
         if(!TextUtils.isEmpty(mashTemp.getDuration()))
-            mashTempViewHolder.duration_tv.setText("Duration: " + mashTemp.getDuration());
+            mashTempViewHolder.duration_tv.setText(context.getString(R.string.duration, mashTemp.getDuration()));
         else
             mashTempViewHolder.duration_tv.setVisibility(View.GONE);
     }
@@ -49,10 +49,10 @@ public class MashTempListAdapter extends RecyclerView.Adapter<MashTempListAdapte
 
     class MashTempViewHolder extends RecyclerView.ViewHolder {
 
-        TextView temp_tv;
-        TextView duration_tv;
+        final TextView temp_tv;
+        final TextView duration_tv;
 
-        public MashTempViewHolder(View itemView) {
+        MashTempViewHolder(View itemView) {
             super(itemView);
             temp_tv = itemView.findViewById(R.id.temp_tv);
             duration_tv = itemView.findViewById(R.id.duration_tv);

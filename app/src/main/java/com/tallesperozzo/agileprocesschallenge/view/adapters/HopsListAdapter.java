@@ -6,12 +6,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.model.Hops;
 
@@ -19,8 +15,8 @@ import java.util.List;
 
 public class HopsListAdapter extends RecyclerView.Adapter<HopsListAdapter.HopsViewHolder> {
 
-    Context context;
-    List<Hops> hopsList;
+    private final Context context;
+    private final List<Hops> hopsList;
 
     public HopsListAdapter(Context context, List<Hops> hopsList) {
         this.context = context;
@@ -38,9 +34,9 @@ public class HopsListAdapter extends RecyclerView.Adapter<HopsListAdapter.HopsVi
     public void onBindViewHolder(@NonNull final HopsViewHolder hopsViewHolder, int position) {
         Hops hops = hopsList.get(position);
         hopsViewHolder.name_tv.setText(hops.getName());
-        hopsViewHolder.amount_tv.setText(hops.getAmount().getValue() + " " + hops.getAmount().getUnit());
-        hopsViewHolder.add_tv.setText("Add: " + String.valueOf(hops.getAdd()));
-        hopsViewHolder.attr_tv.setText("Attribute: " + hops.getAttribute());
+        hopsViewHolder.amount_tv.setText(context.getString(R.string.measure_placeholder, String.valueOf(hops.getAmount().getValue()), hops.getAmount().getUnit()));
+        hopsViewHolder.add_tv.setText(context.getString(R.string.add, String.valueOf(hops.getAdd())));
+        hopsViewHolder.attr_tv.setText(context.getString(R.string.attr, hops.getAttribute()));
     }
 
     @Override
@@ -50,12 +46,12 @@ public class HopsListAdapter extends RecyclerView.Adapter<HopsListAdapter.HopsVi
 
     class HopsViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name_tv;
-        TextView amount_tv;
-        TextView add_tv;
-        TextView attr_tv;
+        final TextView name_tv;
+        final TextView amount_tv;
+        final TextView add_tv;
+        final TextView attr_tv;
 
-        public HopsViewHolder(View itemView) {
+        HopsViewHolder(View itemView) {
             super(itemView);
             name_tv = itemView.findViewById(R.id.name_tv);
             amount_tv = itemView.findViewById(R.id.amount_tv);

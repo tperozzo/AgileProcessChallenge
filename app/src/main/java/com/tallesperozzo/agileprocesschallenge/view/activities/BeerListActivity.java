@@ -1,5 +1,6 @@
 package com.tallesperozzo.agileprocesschallenge.view.activities;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
@@ -24,7 +26,7 @@ import android.os.AsyncTask;
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.data.FavoriteBeersContract;
 import com.tallesperozzo.agileprocesschallenge.model.Beer;
-import com.tallesperozzo.agileprocesschallenge.retrofit.RetrofitInitiazer;
+import com.tallesperozzo.agileprocesschallenge.retrofit.RetrofitInitializer;
 import com.tallesperozzo.agileprocesschallenge.retrofit.service.BeerService;
 import com.tallesperozzo.agileprocesschallenge.utils.Constants;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.BeerListAdapter;
@@ -32,6 +34,7 @@ import com.tallesperozzo.agileprocesschallenge.view.adapters.BeerListAdapter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,19 +42,19 @@ import retrofit2.Response;
 
 public class BeerListActivity extends AppCompatActivity implements BeerListAdapter.ListItemClickListener{
 
-    RecyclerView beerList_rv;
-    BeerListAdapter beerListAdapter;
-    ProgressBar beers_pb;
-    List<Beer> beerList;
-    int page = 1;
-    int get_mode;
-    boolean isLoading = false;
-    Context context;
+    private RecyclerView beerList_rv;
+    private BeerListAdapter beerListAdapter;
+    private List<Beer> beerList;
+    private int page = 1;
+    private int get_mode;
+    private boolean isLoading = false;
+    private Context context;
     private SharedPreferences sharedPrefSettings;
-    Dialog loadingDialog;
-    boolean goToDetails = false;
+    private Dialog loadingDialog;
+    private boolean goToDetails = false;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_beer_list);
@@ -59,7 +62,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
         context = this;
         sharedPrefSettings = getSharedPreferences(Constants.SHARED_PREF_REF, 0);
-        get_mode = getSetting(Constants.GET_MODE_PREF, Constants.API_MODE);
+        get_mode = getSetting();
 
         beerList = new ArrayList<>();
         beerListAdapter = new BeerListAdapter(this, beerList, this);
@@ -73,7 +76,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 getFavoriteBeers();
         }
         else
-            beerList = (ArrayList<Beer>)savedInstanceState.getSerializable(Constants.RV_ITENS_SAVED);
+            beerList = (ArrayList<Beer>) savedInstanceState.getSerializable(Constants.RV_ITENS_SAVED);
     }
 
     @Override
@@ -127,7 +130,6 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     }
 
     private void setupViews(){
-        beers_pb = findViewById(R.id.beers_pb);
         beerList_rv = findViewById(R.id.beer_list_rv);
         beerList_rv.setHasFixedSize(true);
         beerList_rv.setLayoutManager(new LinearLayoutManager(this));
@@ -140,21 +142,21 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         FavoriteBeersTask fTask = new FavoriteBeersTask(context);
         fTask.execute();
         get_mode = Constants.FAVORITES_MODE;
-        setSetting(Constants.GET_MODE_PREF, Constants.FAVORITES_MODE);
+        setSetting(Constants.FAVORITES_MODE);
     }
 
     private void getBeerListFromAPI(){
         setTitle("Beers from Punk API");
         get_mode = Constants.API_MODE;
-        setSetting(Constants.GET_MODE_PREF, Constants.API_MODE);
+        setSetting(Constants.API_MODE);
         StartLoading();
-        BeerService service = RetrofitInitiazer.getRetrofitInstance().create(BeerService.class);
+        BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
         Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
 
         call.enqueue(new Callback<List<Beer>>() {
             @Override
-            public void onResponse(Call<List<Beer>> call, Response<List<Beer>> response) {
-                if(!response.body().isEmpty()){
+            public void onResponse(@NonNull Call<List<Beer>> call, @NonNull Response<List<Beer>> response) {
+                if(!Objects.requireNonNull(response.body()).isEmpty()){
                     beerList.addAll(response.body());
                     beerListAdapter.notifyDataSetChanged();
                     RVScroolToFirstLoaded();
@@ -167,14 +169,14 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             }
 
             @Override
-            public void onFailure(Call<List<Beer>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
                 FinishLoading();
                 Snackbar.make(findViewById(R.id.beer_list_root_layout), "Connection Error", Snackbar.LENGTH_SHORT).show();
             }
         });
     }
 
-    public void RVScroolToFirstLoaded(){
+    private void RVScroolToFirstLoaded(){
         RecyclerView.SmoothScroller smoothScroller = new
                 LinearSmoothScroller(context) {
                     @Override protected int getVerticalSnapPreference() {
@@ -182,16 +184,16 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                     }
                 };
         smoothScroller.setTargetPosition((page-1) * Constants.PER_PAGE);
-        beerList_rv.getLayoutManager().startSmoothScroll(smoothScroller);
+        Objects.requireNonNull(beerList_rv.getLayoutManager()).startSmoothScroll(smoothScroller);
     }
 
-    public void StartLoading(){
+    private void StartLoading(){
         ShowLoadingDialog();
         isLoading = true;
         invalidateOptionsMenu();
     }
 
-    public void FinishLoading(){
+    private void FinishLoading(){
         DismissLoadingDialog();
         isLoading = false;
         invalidateOptionsMenu();
@@ -214,11 +216,12 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         }
     }
 
-    public class FavoriteBeersTask extends AsyncTask<Void, Void, List<Beer>> {
+    @SuppressLint("StaticFieldLeak")
+    class FavoriteBeersTask extends AsyncTask<Void, Void, List<Beer>> {
 
-        private Context mContext;
+        private final Context mContext;
 
-        public FavoriteBeersTask(Context context) {
+        FavoriteBeersTask(Context context) {
             mContext = context;
         }
 
@@ -273,20 +276,20 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
         }
     }
 
-    private int getSetting(String tag, int defaultReturn) {
+    private int getSetting() {
         try {
-            return sharedPrefSettings.getInt(tag, defaultReturn);
+            return sharedPrefSettings.getInt(Constants.GET_MODE_PREF, Constants.API_MODE);
         } catch (Exception e) {
-            return defaultReturn;
+            return Constants.API_MODE;
         }
     }
 
-    private void setSetting(String tag, int value) {
+    private void setSetting(int value) {
         try {
             SharedPreferences.Editor editor = sharedPrefSettings.edit();
-            editor.putInt(tag, value);
-            editor.commit();
-        } catch (Exception e) {
+            editor.putInt(Constants.GET_MODE_PREF, value);
+            editor.apply();
+        } catch (Exception ignored) {
 
         }
     }
@@ -294,19 +297,19 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     private void ShowLoadingDialog(){
         loadingDialog = new Dialog(context);
         loadingDialog.setContentView(R.layout.dialog_loading);
-        loadingDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-        ProgressBar loadind_pg = loadingDialog.findViewById(R.id.loading_pb);
-        loadind_pg.setIndeterminate(true);
-        loadind_pg.setVisibility(View.VISIBLE);
+        Objects.requireNonNull(loadingDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+        ProgressBar loading_pg = loadingDialog.findViewById(R.id.loading_pb);
+        loading_pg.setIndeterminate(true);
+        loading_pg.setVisibility(View.VISIBLE);
         loadingDialog.setCancelable(false);
         loadingDialog.show();
     }
 
     private void DismissLoadingDialog(){
         if(loadingDialog.isShowing()) {
-            ProgressBar loadind_pg = loadingDialog.findViewById(R.id.loading_pb);
-            loadind_pg.setIndeterminate(false);
-            loadind_pg.setVisibility(View.GONE);
+            ProgressBar loading_pg = loadingDialog.findViewById(R.id.loading_pb);
+            loading_pg.setIndeterminate(false);
+            loading_pg.setVisibility(View.GONE);
             loadingDialog.dismiss();
         }
     }

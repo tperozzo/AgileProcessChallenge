@@ -15,8 +15,8 @@ import java.util.List;
 
 public class MaltListAdapter extends RecyclerView.Adapter<MaltListAdapter.MaltViewHolder>{
 
-    Context context;
-    List<Malt> maltList;
+    private final Context context;
+    private final List<Malt> maltList;
 
     public MaltListAdapter(Context context, List<Malt> maltList) {
         this.context = context;
@@ -34,7 +34,7 @@ public class MaltListAdapter extends RecyclerView.Adapter<MaltListAdapter.MaltVi
     public void onBindViewHolder(@NonNull final MaltViewHolder hopsViewHolder, int position) {
         Malt malt = maltList.get(position);
         hopsViewHolder.name_tv.setText(malt.getName());
-        hopsViewHolder.amount_tv.setText(malt.getAmount().getValue() + " " + malt.getAmount().getUnit());
+        hopsViewHolder.amount_tv.setText(context.getString(R.string.measure_placeholder, String.valueOf(malt.getAmount().getValue()), malt.getAmount().getUnit()));
     }
 
     @Override
@@ -44,10 +44,10 @@ public class MaltListAdapter extends RecyclerView.Adapter<MaltListAdapter.MaltVi
 
     class MaltViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name_tv;
-        TextView amount_tv;
+        final TextView name_tv;
+        final TextView amount_tv;
 
-        public MaltViewHolder(View itemView) {
+        MaltViewHolder(View itemView) {
             super(itemView);
             name_tv = itemView.findViewById(R.id.name_tv);
             amount_tv = itemView.findViewById(R.id.amount_tv);

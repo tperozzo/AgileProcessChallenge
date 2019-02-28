@@ -2,14 +2,10 @@ package com.tallesperozzo.agileprocesschallenge.model;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class Measure implements Serializable {
-    float value;
-    String unit;
-
-    public Measure(int value, String unit) {
-        this.value = value;
-        this.unit = unit;
-    }
+    private float value;
+    private String unit;
 
     public float getValue() {
         return value;

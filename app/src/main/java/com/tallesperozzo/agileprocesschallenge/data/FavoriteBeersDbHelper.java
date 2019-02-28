@@ -3,13 +3,12 @@ package com.tallesperozzo.agileprocesschallenge.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.annotation.Nullable;
 
-public class FavoriteBeersDbHelper extends SQLiteOpenHelper {
+class FavoriteBeersDbHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "favoritebeers.db";
+    private static final String DATABASE_NAME = "favoritebeers.db";
 
-    public static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 1;
 
     public FavoriteBeersDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -17,7 +16,7 @@ public class FavoriteBeersDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " + FavoriteBeersContract.FavoriteBeersEntry.TABLE_NAME
+        final String SQL_CREATE_FAVORITE_BEERS_TABLE = "CREATE TABLE " + FavoriteBeersContract.FavoriteBeersEntry.TABLE_NAME
                 + " (" + FavoriteBeersContract.FavoriteBeersEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + " TEXT NOT NULL,"
                 + FavoriteBeersContract.FavoriteBeersEntry.COLUMN_NAME + " TEXT NOT NULL,"
@@ -27,7 +26,7 @@ public class FavoriteBeersDbHelper extends SQLiteOpenHelper {
                 + FavoriteBeersContract.FavoriteBeersEntry.COLUMN_FIRST_BREWED + " TEXT,"
                 + FavoriteBeersContract.FavoriteBeersEntry.COLUMN_CONTRIBUTED_BY + " TEXT);";
 
-        db.execSQL(SQL_CREATE_FAVORITE_MOVIES_TABLE);
+        db.execSQL(SQL_CREATE_FAVORITE_BEERS_TABLE);
     }
 
     @Override

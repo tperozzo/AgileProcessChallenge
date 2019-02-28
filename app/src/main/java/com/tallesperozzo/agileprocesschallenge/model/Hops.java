@@ -2,18 +2,17 @@ package com.tallesperozzo.agileprocesschallenge.model;
 
 import java.io.Serializable;
 
-public class Hops implements Serializable {
-    String name;
-    Measure amount;
-    String add;
-    String attribute;
+/*
+ * Hops Class
+ * Created by Talles Perozzo
+ */
 
-    public Hops(String name, Measure amount, String add, String attribute) {
-        this.name = name;
-        this.amount = amount;
-        this.add = add;
-        this.attribute = attribute;
-    }
+@SuppressWarnings("unused")
+public class Hops implements Serializable {
+    private String name;
+    private Measure amount;
+    private String add;
+    private String attribute;
 
     public String getName() {
         return name;

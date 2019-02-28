@@ -1,7 +1,5 @@
 package com.tallesperozzo.agileprocesschallenge.utils;
 
-import android.net.Uri;
-
 public class Constants {
     public static final String RV_ITENS_SAVED = "rv_itens_saved";
     public static final int PER_PAGE = 10;

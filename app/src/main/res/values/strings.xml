@@ -1,3 +1,44 @@
 <resources>
     <string name="app_name">Agile Process Challenge</string>
+
+    <string name="beer_image_description">Beer image</string>
+    <string name="logo_image_description">Agile Process logo</string>
+    <string name="special_info">Special Info</string>
+    <string name="description">Description:</string>
+    <string name="food_pairing">Food pairing:</string>
+    <string name="brewers_tips">Brewers tips:</string>
+    <string name="technical_info">Technical Info</string>
+    <string name="cooking_info">Cooking info</string>
+    <string name="method">Method:</string>
+    <string name="mash_temp">Mash temp:</string>
+    <string name="fermantation">Fermantation:</string>
+    <string name="twist">Twist:</string>
+    <string name="ingredients">Ingredients:</string>
+    <string name="malt">Malt:</string>
+    <string name="hops">Hops:</string>
+    <string name="yeast">Yeast:</string>
+    <string name="load_more">Load more</string>
+    <string name="get_mode">Get mode</string>
+    <string name="get_from_api">Get Beers from API</string>
+    <string name="get_favorite">Get Favorite Beers</string>
+    <string name="refresh">Refresh</string>
+    <string name="favorite">Favorite</string>
+    <string name="not_favorite">Not Favorite</string>
+    <string name="abv">ABV: %1$s</string>
+    <string name="by">By %1$s</string>
+    <string name="duration">Duration: %1$s</string>
+    <string name="measure_placeholder">%1$s %2$s</string>
+    <string name="add">Add: %1$s</string>
+    <string name="attr">Attribute: %1$s</string>
+    <string name="ibu">IBU: %1$s</string>
+    <string name="target_fg">Target FG: %1$s</string>
+    <string name="target_og">Target OG: %1$s</string>
+    <string name="ebc">EBC: %1$s</string>
+    <string name="srm">SRM: %1$s</string>
+    <string name="ph">Ph: %1$s</string>
+    <string name="attenuation_level">Attenuation level: %1$s</string>
+    <string name="volume">Volume: %1$s</string>
+    <string name="boil_volume">Boil volume: %1$s</string>
+    <string name="food_pairing_placeholder">%1$s;</string>
+    <string name="could_not_load_beer_info">Could not load beer info</string>
 </resources>

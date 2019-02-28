@@ -19,9 +19,9 @@ import java.util.List;
 
 public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerViewHolder> {
 
-    Context context;
-    List<Beer> beerList;
-    final private ListItemClickListener mOnClickListener;
+    private final Context context;
+    private final List<Beer> beerList;
+    private final ListItemClickListener mOnClickListener;
 
     public BeerListAdapter(Context context, List<Beer> beerList, ListItemClickListener listener) {
         this.context = context;
@@ -64,9 +64,9 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
 
         beerViewHolder.name_tv.setText(beer.getName());
         beerViewHolder.tagline_tv.setText(beer.getTagline());
-        beerViewHolder.abv_tv.setText("ABV: " + String.valueOf(beer.getAbv()));
+        beerViewHolder.abv_tv.setText(context.getString(R.string.abv, String.valueOf(beer.getAbv())));
         beerViewHolder.firstBrewed_tv.setText(beer.getFirst_brewed());
-        beerViewHolder.contributedBy_tv.setText("By " + beer.getContributed_by());
+        beerViewHolder.contributedBy_tv.setText(context.getString(R.string.by,beer.getContributed_by()));
     }
 
     @Override
@@ -76,15 +76,15 @@ public class BeerListAdapter extends RecyclerView.Adapter<BeerListAdapter.BeerVi
 
     class BeerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        ImageView imageUrl_iv;
-        ProgressBar imageUrl_pb;
-        TextView name_tv;
-        TextView tagline_tv;
-        TextView abv_tv;
-        TextView firstBrewed_tv;
-        TextView contributedBy_tv;
+        final ImageView imageUrl_iv;
+        final ProgressBar imageUrl_pb;
+        final TextView name_tv;
+        final TextView tagline_tv;
+        final TextView abv_tv;
+        final TextView firstBrewed_tv;
+        final TextView contributedBy_tv;
 
-        public BeerViewHolder(View itemView) {
+        BeerViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             imageUrl_iv = itemView.findViewById(R.id.image_url_iv);

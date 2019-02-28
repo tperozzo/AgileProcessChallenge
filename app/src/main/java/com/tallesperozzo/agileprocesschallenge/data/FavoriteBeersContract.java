@@ -3,10 +3,11 @@ package com.tallesperozzo.agileprocesschallenge.data;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+@SuppressWarnings("ALL")
 public class FavoriteBeersContract {
 
     public static final String AUTHORITY = "com.tallesperozzo.agileprocesschallenge";
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    private static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
     public static final String PATH_FAVORITE_BEERS = "favorite_beers";
 
     public static final class FavoriteBeersEntry implements BaseColumns {

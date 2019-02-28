@@ -5,8 +5,8 @@ import com.tallesperozzo.agileprocesschallenge.retrofit.service.BeerService;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RetrofitInitiazer {
-    public static Retrofit retrofit;
+public class RetrofitInitializer {
+    private static Retrofit retrofit;
 
     public static Retrofit getRetrofitInstance() {
         if (retrofit == null) {

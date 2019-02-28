@@ -3,51 +3,34 @@ package com.tallesperozzo.agileprocesschallenge.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Beer implements Serializable {
-    int id;
-    String name;
-    String tagline;
-    String first_brewed;
-    String description;
-    String image_url;
-    float abv;
-    float ibu;
-    int target_fg;
-    float target_og;
-    int ebc;
-    float srm;
-    float ph;
-    float attenuation_level;
-    Measure volume;
-    Measure boil_volume;
-    Method method;
-    Ingredients ingredients;
-    ArrayList<String> food_pairing;
-    String brewers_tips;
-    String contributed_by;
+/*
+ * Beer Class
+ * Created by Talles Perozzo
+ */
 
-    public Beer(int id, String name, String tagline, String first_brewed, String description, String image_url, float abv, int ibu, int target_fg, int target_og, int ebc, float srm, float ph, float attenuation_level, Measure volume, Measure boil_volume, Method method, ArrayList<String> food_pairing, String brewers_tips, String contributed_by) {
-        this.id = id;
-        this.name = name;
-        this.tagline = tagline;
-        this.first_brewed = first_brewed;
-        this.description = description;
-        this.image_url = image_url;
-        this.abv = abv;
-        this.ibu = ibu;
-        this.target_fg = target_fg;
-        this.target_og = target_og;
-        this.ebc = ebc;
-        this.srm = srm;
-        this.ph = ph;
-        this.attenuation_level = attenuation_level;
-        this.volume = volume;
-        this.boil_volume = boil_volume;
-        this.method = method;
-        this.food_pairing = food_pairing;
-        this.brewers_tips = brewers_tips;
-        this.contributed_by = contributed_by;
-    }
+@SuppressWarnings("unused")
+public class Beer implements Serializable {
+    private final int id;
+    private final String name;
+    private final String tagline;
+    private final String first_brewed;
+    private String description;
+    private final String image_url;
+    private final float abv;
+    private  float ibu;
+    private int target_fg;
+    private float target_og;
+    private  int ebc;
+    private float srm;
+    private float ph;
+    private float attenuation_level;
+    private Measure volume;
+    private Measure boil_volume;
+    private Method method;
+    private Ingredients ingredients;
+    private ArrayList<String> food_pairing;
+    private String brewers_tips;
+    private final String contributed_by;
 
     public Beer(int id, String name, String tagline, float abv, String image_url, String first_brewed, String contributed_by) {
         this.id = id;

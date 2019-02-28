@@ -2,14 +2,10 @@ package com.tallesperozzo.agileprocesschallenge.model;
 
 import java.io.Serializable;
 
+@SuppressWarnings("unused")
 public class MashTemp implements Serializable {
-    Measure temp;
-    String duration;
-
-    public MashTemp(Measure temp, String duration) {
-        this.temp = temp;
-        this.duration = duration;
-    }
+    private Measure temp;
+    private String duration;
 
     public Measure getTemp() {
         return temp;
