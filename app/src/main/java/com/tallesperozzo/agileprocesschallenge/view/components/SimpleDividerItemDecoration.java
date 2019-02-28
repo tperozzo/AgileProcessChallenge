@@ -1,6 +1,7 @@
 package com.tallesperozzo.agileprocesschallenge.view.components;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -10,6 +11,14 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.tallesperozzo.agileprocesschallenge.R;
+
+/*
+ * SimpleDividerItemDecoration
+ *
+ * This component was created to separate the list itens following the material design patterns.
+ *
+ * Created by Talles Perozzo
+ */
 
 public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
     private final Drawable divider;
@@ -22,7 +31,7 @@ public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void onDrawOver(@NonNull Canvas c, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        //int left = parent.getPaddingLeft();
+        int left = ((2 * parent.getWidth()) / 7);
         int right = parent.getWidth() - parent.getPaddingRight();
 
         int childCount = parent.getChildCount();
@@ -41,8 +50,15 @@ public class SimpleDividerItemDecoration extends RecyclerView.ItemDecoration {
                     r.getDisplayMetrics()
             );
 
-            divider.setBounds(90 + 5*px, top, right - px, bottom);
-            divider.draw(c);
+            if(context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                //divider.setBounds(90 + 5 * px, top, right - px, bottom);
+                divider.setBounds(left, top, right - px, bottom);
+                divider.draw(c);
+            }
+            else{
+                divider.setBounds(left, top, right - px, bottom);
+                divider.draw(c);
+            }
         }
     }
 }

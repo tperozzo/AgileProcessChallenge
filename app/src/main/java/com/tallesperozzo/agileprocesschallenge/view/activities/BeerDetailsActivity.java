@@ -86,75 +86,6 @@ public class BeerDetailsActivity extends AppCompatActivity {
         invalidateOptionsMenu();
     }
 
-    //region GetBeerFromFavorites
-    // Get beer from favorites (or not) to setup (or not) favorites button
-
-    private void GetBeerFromFavorites(){
-        if (beer != null) {
-            SetupViews();
-        }
-
-        Cursor result = context.getContentResolver().query(
-                FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
-                null,
-                FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
-                new String[]{String.valueOf(beer.getId())},
-                null
-        );
-
-        if (result != null) {
-            if (result.getCount() > 0)
-                isFavorite = true;
-        } else
-            isFavorite = false;
-
-        Objects.requireNonNull(result).close();
-        canCreateMenu = true;
-        //invalidateOptionsMenu();
-    }
-
-    //endregion
-
-    //region GetBeerByID from Punk API
-
-    private void GetBeerByID(){
-        if(isOnline()) {
-            final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
-            root_ll.setVisibility(View.GONE);
-            isFavorite = true;
-            StartLoading();
-            BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
-            Call<List<Beer>> call = service.getBeerById(beer.getId());
-
-            call.enqueue(new retrofit2.Callback<List<Beer>>() {
-                @Override
-                public void onResponse(@NonNull Call<List<Beer>> call, @NonNull Response<List<Beer>> response) {
-                    if (!Objects.requireNonNull(response.body()).isEmpty()) {
-                        beer = response.body().get(0);
-                        FinishLoading();
-                        root_ll.setVisibility(View.VISIBLE);
-                        SetupViews();
-                        isFavoriteAndLoaded = true;
-                    } else {
-                        FinishLoading();
-                        Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
-                    FinishLoading();
-                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
-                }
-            });
-        }
-        else{
-            Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
-        }
-    }
-
-    //endregion
-
     //region SetupViews
     // Load interface after getting beer
 
@@ -325,6 +256,75 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //endregion
+
+    //region GetBeerFromFavorites
+    // Get beer from favorites (or not) to setup (or not) favorites button
+
+    private void GetBeerFromFavorites(){
+        if (beer != null) {
+            SetupViews();
+        }
+
+        Cursor result = context.getContentResolver().query(
+                FavoriteBeersContract.FavoriteBeersEntry.CONTENT_URI,
+                null,
+                FavoriteBeersContract.FavoriteBeersEntry.COLUMN_ID_BEER + "=?",
+                new String[]{String.valueOf(beer.getId())},
+                null
+        );
+
+        if (result != null) {
+            if (result.getCount() > 0)
+                isFavorite = true;
+        } else
+            isFavorite = false;
+
+        Objects.requireNonNull(result).close();
+        canCreateMenu = true;
+        //invalidateOptionsMenu();
+    }
+
+    //endregion
+
+    //region GetBeerByID from Punk API
+
+    private void GetBeerByID(){
+        if(isOnline()) {
+            final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
+            root_ll.setVisibility(View.GONE);
+            isFavorite = true;
+            StartLoading();
+            BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
+            Call<List<Beer>> call = service.getBeerById(beer.getId());
+
+            call.enqueue(new retrofit2.Callback<List<Beer>>() {
+                @Override
+                public void onResponse(@NonNull Call<List<Beer>> call, @NonNull Response<List<Beer>> response) {
+                    if (!Objects.requireNonNull(response.body()).isEmpty()) {
+                        beer = response.body().get(0);
+                        FinishLoading();
+                        root_ll.setVisibility(View.VISIBLE);
+                        SetupViews();
+                        isFavoriteAndLoaded = true;
+                    } else {
+                        FinishLoading();
+                        Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
+                    FinishLoading();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }
+        else{
+            Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
         }
     }
 

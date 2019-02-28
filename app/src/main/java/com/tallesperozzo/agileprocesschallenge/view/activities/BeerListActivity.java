@@ -22,8 +22,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.os.AsyncTask;
 
-
-
 import com.tallesperozzo.agileprocesschallenge.R;
 import com.tallesperozzo.agileprocesschallenge.data.FavoriteBeersContract;
 import com.tallesperozzo.agileprocesschallenge.model.Beer;
