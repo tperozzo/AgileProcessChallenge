@@ -37,6 +37,7 @@ import com.tallesperozzo.agileprocesschallenge.view.adapters.HopsListAdapter;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.MaltListAdapter;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.MashTempListAdapter;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -83,10 +84,27 @@ public class BeerDetailsActivity extends AppCompatActivity {
         }
 
         else{
-            GetBeerByID();
+            if(savedInstanceState == null)
+                GetBeerByID();
+            else {
+                beer = (Beer) savedInstanceState.getSerializable(Constants.BEER_SAVED);
+                SetupViews();
+                canCreateMenu = savedInstanceState.getBoolean(Constants.CAN_CREATE_MENU_SAVED);
+                isFavoriteAndLoaded = savedInstanceState.getBoolean(Constants.IS_FAVORITE_AND_LOADED_SAVED);
+                isFavorite = savedInstanceState.getBoolean(Constants.IS_FAVORITE_SAVED);
+            }
         }
 
         invalidateOptionsMenu();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(Constants.BEER_SAVED, beer);
+        outState.putBoolean(Constants.CAN_CREATE_MENU_SAVED, canCreateMenu);
+        outState.putBoolean(Constants.IS_FAVORITE_AND_LOADED_SAVED, isFavoriteAndLoaded);
+        outState.putBoolean(Constants.IS_FAVORITE_SAVED, isFavorite);
+        super.onSaveInstanceState(outState);
     }
 
     //region SetupViews

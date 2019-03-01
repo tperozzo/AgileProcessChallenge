@@ -7,6 +7,10 @@ package com.tallesperozzo.agileprocesschallenge.utils;
 
 public class Constants {
     public static final String RV_ITENS_SAVED = "rv_itens_saved";
+    public static final String BEER_SAVED = "beer_saved";
+    public static final String CAN_CREATE_MENU_SAVED = "ccm_saved";
+    public static final String IS_FAVORITE_AND_LOADED_SAVED = "ifal_saved";
+    public static final String IS_FAVORITE_SAVED = "if_saved";
     public static final int PER_PAGE = 10;
     public static final String BEER_TAG = "BEER";
     public static final int SPLASH_TIME_OUT = 2000;
