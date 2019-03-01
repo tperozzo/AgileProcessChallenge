@@ -22,6 +22,12 @@ O app desenvolvido possui 3 activities: uma Splash (SplashActivity), uma que bus
 * BeerListActivity: busca a lista de cervejas na Punk API ou na base de dados de cervejas favoritas. Aqui o usuário pode alterar o modo de busca de cervejas através do menu superior direito. Quando o modo é alterado, é salvo no arquivo de preferências (Shared Preferences), para que na próxima vez que o app for iniciado, carregar a lista conforme o último modo utilizado. Quando o modo de carregamento de cervejas é através da API, o aplicativo permite que o usuário carregue de 10 em 10 cervejas. Toda vez que as cervejas são carregadas assim, a recyclerview é "scrollada" para a posição da primeira nova cerveja na lista. Quando o modo de carregamento é através das favoritas, as cervejas são buscadas no banco de dados local através de um Cursor;
 * DetailsListActivity: carrega todas as informações de uma cerveja, tendo ela vindo da lista de favoritas ou da lista da API. Além disso, é nesta activity que a cerveja é adicionada ou removida do banco de favoritas (através das funções do ContentProvider). A cerveja que foi carregada na activity anterior pela API e passada para a activity de detalhes pela intent (como Serializable), enquanto que a cerveja que veio da lista de favoritas é carregada por meio de uma chamada para a API pelo id. Isso foi desenvolvido assim pois o banco de dados não contém todos os dados de uma cerveja e sim apenas algumas informações para criar a recyclerview. Além de que é interessante explorar outra chamada da API.
 
+Seguem aqui alguns prints das 3 activities:
+
+<p align="center">
+  <img src="https://github.com/tperozzo/AgileProcessChallenge/blob/master/printscreens/SplashActivity_print.png" border="1px" width="256" title="Github Logo">   <img src="https://github.com/tperozzo/AgileProcessChallenge/blob/master/printscreens/BeerListActivity_print.png" width="256" title="Github Logo">   <img src="https://github.com/tperozzo/AgileProcessChallenge/blob/master/printscreens/BeerDetailsActivity_print.png" width="256" title="Github Logo">
+</p>
+
 ### Outras informações
 
 * Para as chamadas a API foi usado Retrofit;
