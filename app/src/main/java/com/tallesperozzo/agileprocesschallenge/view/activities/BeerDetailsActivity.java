@@ -37,7 +37,6 @@ import com.tallesperozzo.agileprocesschallenge.view.adapters.HopsListAdapter;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.MaltListAdapter;
 import com.tallesperozzo.agileprocesschallenge.view.adapters.MashTempListAdapter;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,6 +64,8 @@ public class BeerDetailsActivity extends AppCompatActivity {
     private boolean canCreateMenu = false;
     private int get_mode;
 
+    //region LifecycleMethods
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +81,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
         beer = (Beer) intent.getSerializableExtra(Constants.BEER_TAG);
 
         if(get_mode == Constants.API_MODE) {
-            GetBeerFromFavorites();
+            VerifyIfBeerIsFavorite();
         }
 
         else{
@@ -113,6 +114,8 @@ public class BeerDetailsActivity extends AppCompatActivity {
         outState.putBoolean(Constants.IS_FAVORITE_SAVED, isFavorite);
         super.onSaveInstanceState(outState);
     }
+
+    //endregion
 
     //region SetupViews
     // Load interface after getting beer
@@ -289,10 +292,10 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
     //endregion
 
-    //region GetBeerFromFavorites
-    // Get beer from favorites (or not) to setup (or not) favorites button
+    //region Verify if beer is favorite
+    // Verify if beer is favorite to setup favorites menu buttons
 
-    private void GetBeerFromFavorites(){
+    private void VerifyIfBeerIsFavorite(){
         if (beer != null) {
             SetupViews();
         }
