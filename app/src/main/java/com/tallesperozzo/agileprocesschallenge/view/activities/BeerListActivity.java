@@ -19,6 +19,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.os.AsyncTask;
 
@@ -55,6 +56,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     private RecyclerView beerList_rv;
     private Dialog loadingDialog;
+    private ImageView noConnection_iv;
     private BeerListAdapter beerListAdapter;
     private Context context;
     private SharedPreferences sharedPrefSettings;
@@ -110,6 +112,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     //region Setup Views and Components
 
     private void SetupViews(){
+        noConnection_iv = findViewById(R.id.no_connection_iv);
         beerList_rv = findViewById(R.id.beer_list_rv);
         beerList_rv.setLayoutManager(new LinearLayoutManager(this));
         //beerList_rv.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
@@ -205,13 +208,13 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 @Override
                 public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
                     FinishLoading();
-                    Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+                    ShowNoConnectionUI();
                 }
             });
         }
         else{
+            ShowNoConnectionUI();
             invalidateOptionsMenu();
-            Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -340,6 +343,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
     //region Loading Methods
 
     private void StartLoading(){
+        HideNoConnectionUI();
         ShowLoadingDialog();
         isLoading = true;
         invalidateOptionsMenu();
@@ -387,6 +391,17 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void ShowNoConnectionUI(){
+        if(beerList.isEmpty())
+            noConnection_iv.setVisibility(View.VISIBLE);
+        Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void HideNoConnectionUI(){
+        if(noConnection_iv.getVisibility() == View.VISIBLE)
+            noConnection_iv.setVisibility(View.GONE);
     }
 
     //endregion
