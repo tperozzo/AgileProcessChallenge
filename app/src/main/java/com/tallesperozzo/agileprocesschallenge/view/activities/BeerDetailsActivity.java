@@ -293,10 +293,10 @@ public class BeerDetailsActivity extends AppCompatActivity {
     //region GetBeerByID from Punk API
 
     private void GetBeerByID(){
+        final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
+        root_ll.setVisibility(View.GONE);
+        isFavorite = true;
         if(isOnline()) {
-            final LinearLayout root_ll = findViewById(R.id.details_beer_layout);
-            root_ll.setVisibility(View.GONE);
-            isFavorite = true;
             StartLoading();
             BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
             Call<List<Beer>> call = service.getBeerById(beer.getId());
@@ -312,7 +312,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
                         isFavoriteAndLoaded = true;
                     } else {
                         FinishLoading();
-                        Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.could_not_load_beer_info), Snackbar.LENGTH_SHORT).show();
                     }
                 }
 
@@ -324,7 +324,9 @@ public class BeerDetailsActivity extends AppCompatActivity {
             });
         }
         else{
-            Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+            canCreateMenu = true;
+            invalidateOptionsMenu();
+            Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
         }
     }
 

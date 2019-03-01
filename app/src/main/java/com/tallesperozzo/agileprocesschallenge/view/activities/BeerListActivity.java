@@ -179,11 +179,11 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
 
     // Punk API call
     private void GetBeerListFromAPI(){
-        if(isOnline()) {
+        setTitle(getString(R.string.beers_from_punk_api));
+        get_mode = Constants.API_MODE;
+        setSettingGetMode(Constants.API_MODE);
 
-            setTitle(getString(R.string.beers_from_punk_api));
-            get_mode = Constants.API_MODE;
-            setSettingGetMode(Constants.API_MODE);
+        if(isOnline()) {
             StartLoading();
             BeerService service = RetrofitInitializer.getRetrofitInstance().create(BeerService.class);
             Call<List<Beer>> call = service.getBeers(page, Constants.PER_PAGE);
@@ -210,6 +210,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             });
         }
         else{
+            invalidateOptionsMenu();
             Snackbar.make(findViewById(R.id.beer_list_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
         }
     }
