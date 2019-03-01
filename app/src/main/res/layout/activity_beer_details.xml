@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/details_root_layout">
+
+    <ImageView
+        android:id="@+id/no_connection_iv"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_gravity="center"
+        android:src="@drawable/dino"
+        android:contentDescription="@string/no_connection_image_description"
+        android:visibility="gone"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -468,4 +477,4 @@
 
     </ScrollView>
 
-</LinearLayout>
+</FrameLayout>

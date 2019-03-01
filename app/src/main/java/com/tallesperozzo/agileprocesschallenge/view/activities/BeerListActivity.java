@@ -208,7 +208,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
                 @Override
                 public void onFailure(@NonNull Call<List<Beer>> call, @NonNull Throwable t) {
                     FinishLoading();
-                    ShowNoConnectionUI();
+                    Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.could_not_load_beer_list), Snackbar.LENGTH_SHORT).show();
                 }
             });
         }

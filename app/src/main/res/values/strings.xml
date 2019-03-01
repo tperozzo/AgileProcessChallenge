@@ -3,6 +3,7 @@
 
     <string name="beer_image_description">Beer image</string>
     <string name="logo_image_description">Agile Process logo</string>
+    <string name="no_connection_image_description">No connection image</string>
     <string name="special_info">Special Info</string>
     <string name="description">Description:</string>
     <string name="food_pairing">Food pairing:</string>
@@ -41,6 +42,7 @@
     <string name="boil_volume">Boil volume: %1$s</string>
     <string name="food_pairing_placeholder">%1$s;</string>
     <string name="could_not_load_beer_info">Could not load beer info</string>
+    <string name="could_not_load_beer_list">Could not load beer list</string>
     <string name="favorite_beers">Favorite Beers</string>
     <string name="beers_from_punk_api">Beers from Punk API</string>
     <string name="connection_error">Connection error. Try again!</string>

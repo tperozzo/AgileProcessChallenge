@@ -57,6 +57,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
     private Context context;
     private Dialog loadingDialog;
     private ProgressBar imageUrl_pb;
+    private ImageView noConnection_iv;
 
     private boolean isFavorite = false;
     private boolean isFavoriteAndLoaded = false;
@@ -70,6 +71,8 @@ public class BeerDetailsActivity extends AppCompatActivity {
 
         context = this;
         final Intent intent = getIntent();
+
+        noConnection_iv = findViewById(R.id.no_connection_iv);
 
         get_mode = intent.getIntExtra(Constants.GET_MODE_PREF, 0);
 
@@ -324,9 +327,9 @@ public class BeerDetailsActivity extends AppCompatActivity {
             });
         }
         else{
+            ShowNoConnectionUI();
             canCreateMenu = true;
             invalidateOptionsMenu();
-            Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
         }
     }
 
@@ -360,6 +363,7 @@ public class BeerDetailsActivity extends AppCompatActivity {
     //region Loading Methods
 
     private void StartLoading(){
+        HideNoConnectionUI();
         ShowLoadingDialog();
     }
 
@@ -405,6 +409,16 @@ public class BeerDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+    }
+
+    private void ShowNoConnectionUI(){
+        noConnection_iv.setVisibility(View.VISIBLE);
+        Snackbar.make(findViewById(R.id.details_root_layout), getString(R.string.connection_error), Snackbar.LENGTH_SHORT).show();
+    }
+
+    private void HideNoConnectionUI(){
+        if(noConnection_iv.getVisibility() == View.VISIBLE)
+            noConnection_iv.setVisibility(View.GONE);
     }
 
     //endregion
