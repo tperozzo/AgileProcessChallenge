@@ -39,3 +39,4 @@ Seguem aqui alguns prints das 3 activities:
 * O código de todo o projeto foi analizado com a ferramenta Lint (Analyze > Inspect Code...) do Android Studio para corrigir todos os tipos de erros, warnings, de dependência e overdraw possíveis;
 * Foi criado um ícone para o app, a partir do logo da Agile Process;
 * O código, especialmente as activities, estão separadas por regiões. As classes contém um header e as funções tem um comentário sobre sua utilidade.
+* Os commits foram feitos a cada nova funcionalidade/feature desenvolvida.
