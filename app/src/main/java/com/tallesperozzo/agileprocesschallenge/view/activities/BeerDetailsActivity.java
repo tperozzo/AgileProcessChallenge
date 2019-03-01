@@ -99,6 +99,13 @@ public class BeerDetailsActivity extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        overridePendingTransition(R.anim.left_to_right, R.anim.right_to_left);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putSerializable(Constants.BEER_SAVED, beer);
         outState.putBoolean(Constants.CAN_CREATE_MENU_SAVED, canCreateMenu);

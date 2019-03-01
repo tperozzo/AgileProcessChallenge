@@ -313,6 +313,7 @@ public class BeerListActivity extends AppCompatActivity implements BeerListAdapt
             i.putExtra(Constants.BEER_TAG, beerList.get(clickedItemIndex));
             goToDetails = true;
             startActivity(i);
+            overridePendingTransition(R.anim.enter, R.anim.exit);
         }
     }
 
